@@ -1,0 +1,746 @@
+name: "DeconvGenNet"
+layers {
+  name: "data"
+  type: DATA
+  top: "data"
+  top: "label"
+  data_param {
+    source: "chair_lmdb/data-lmdb"
+    batch_size: 64
+    scale: 0.00390625
+    backend: LMDB
+  }
+}
+layers {
+  name: "data_aug"
+  type: DATA_AUGMENTATION
+  bottom: "data"
+  top: "data_aug"
+  top: "aug_params"
+  coeff_schedule_param {
+    initial_coeff: 0.1
+    final_coeff: 1.
+    gamma: 0.00001
+  }
+  augmentation_param {
+    crop_size: 128
+    max_multiplier: 1.
+    recompute_mean: 0
+    zoom: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.2
+      spread: 0.2
+      exp: true
+      prob: 1.
+    }
+    squeeze: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.1
+      exp: true
+      prob: 1.
+    }
+    translate {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.1
+      prob: 1.
+    }
+    rotate {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.2
+      prob: 1.
+    }
+    lmult_mult: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.7
+      prob: 1.
+      exp: true
+    }
+    sat_mult: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.7
+      prob: 1.
+      exp: true
+    }
+    col_rotate: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 1.5
+      prob: 1.
+    }
+  }   
+}
+layers {
+  name: "segm"
+  type: DATA
+  top: "segm"
+  top: "label1"
+  data_param {
+    source: "chair_lmdb/segm-lmdb"
+    batch_size: 64
+    scale: 0.00390625
+    backend: LMDB
+  }
+}
+layers {
+  name: "segm_aug"
+  type: DATA_AUGMENTATION
+  bottom: "segm"
+  top: "segm_aug"
+  bottom: "aug_params"
+  augmentation_param {
+    crop_size: 128
+    max_multiplier: 1.
+    recompute_mean: 0
+    lmult_mult: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.001
+      prob: 0.
+      exp: true
+    }
+    sat_mult: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.001
+      prob: 0.
+      exp: true
+    }
+    col_rotate: {
+      rand_type: "uniform_bernoulli"
+      mean: 0.
+      spread: 0.001
+      prob: 0.
+    }
+  }   
+}
+layers {
+  name: "angles"
+  type: HDF5_DATA
+  top: "angles"
+  top: "labels"
+  hdf5_data_param {
+    source: "labels/angles_reduced_shuffle.txt"
+    batch_size: 64
+  }
+}
+layers{
+  name: "label_to_onehot"
+  type: LABEL_TO_ONEHOT
+  bottom: "label"
+  top: "onehot"
+  inner_product_param {
+    num_output: 843
+  }
+}
+layers {
+  name: "fc1_label"
+  type: INNER_PRODUCT
+  bottom: "onehot"
+  top: "fc1_label"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian"
+      mean: 0.
+      std: 1.
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu1_label"
+  type: RELU
+  bottom: "fc1_label"
+  top: "fc1_label"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc2_label"
+  type: INNER_PRODUCT
+  bottom: "fc1_label"
+  top: "fc2_label"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu2_label"
+  type: RELU
+  bottom: "fc2_label"
+  top: "fc2_label"
+}
+layers {
+  name: "fc1_angles"
+  type: INNER_PRODUCT
+  bottom: "angles"
+  top: "fc1_angles"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu1_angles"
+  type: RELU
+  bottom: "fc1_angles"
+  top: "fc1_angles"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc2_angles"
+  type: INNER_PRODUCT
+  bottom: "fc1_angles"
+  top: "fc2_angles"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu2_angles"
+  type: RELU
+  bottom: "fc2_angles"
+  top: "fc2_angles"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc1_aug_params"
+  type: INNER_PRODUCT
+  bottom: "aug_params"
+  top: "fc1_aug_params"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian"
+      mean: 0.
+      std: 1.
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu1_aug_params"
+  type: RELU
+  bottom: "fc1_aug_params"
+  top: "fc1_aug_params"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc2_aug_params"
+  type: INNER_PRODUCT
+  bottom: "fc1_aug_params"
+  top: "fc2_aug_params"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 512
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu2_aug_params"
+  type: RELU
+  bottom: "fc2_aug_params"
+  top: "fc2_aug_params"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "concat"
+  type: CONCAT
+  bottom: "fc2_label"
+  bottom: "fc2_angles"
+  bottom: "fc2_aug_params"
+  top: "fc2"
+  concat_param {
+    concat_dim: 1
+  }
+}
+layers {
+  name: "fc3"
+  type: INNER_PRODUCT
+  bottom: "fc2"
+  top: "fc3"
+  blobs_lr: 1.
+  blobs_lr: 2
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 1024
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu3"
+  type: RELU
+  bottom: "fc3"
+  top: "fc3"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc4"
+  type: INNER_PRODUCT
+  bottom: "fc3"
+  top: "fc4"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 1024
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu4"
+  type: RELU
+  bottom: "fc4"
+  top: "fc4"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "fc5"
+  type: INNER_PRODUCT
+  bottom: "fc4"
+  top: "fc5"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 16384
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu5"
+  type: RELU
+  bottom: "fc5"
+  top: "fc5"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "reshape"
+  type: RESHAPE
+  bottom: "fc5"
+  top: "fc5_reshape"
+  reshape_param {
+    channels: 256
+    height: 8
+    width: 8
+  }
+}
+layers {
+  name: "deconv6"           
+  type: DECONVOLUTION
+  bottom: "fc5_reshape"
+  top: "deconv6"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 256
+    output_height: 16 
+    output_width: 16
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu6"
+  type: RELU
+  bottom: "deconv6"
+  top: "deconv6"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv7"           
+  type: DECONVOLUTION
+  bottom: "deconv6"
+  top: "deconv7"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 92
+    output_height: 32 
+    output_width: 32
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu7"
+  type: RELU
+  bottom: "deconv7"
+  top: "deconv7"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv8_new"           
+  type: DECONVOLUTION
+  bottom: "deconv7"
+  top: "deconv8"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 92
+    output_height: 64 
+    output_width: 64
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu8"
+  type: RELU
+  bottom: "deconv8"
+  top: "deconv8"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv9_new"           
+  type: DECONVOLUTION
+  bottom: "deconv8"
+  top: "deconv9"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 3
+    output_height: 128 
+    output_width: 128
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 0.1
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "fc5_segm"
+  type: INNER_PRODUCT
+  bottom: "fc4"
+  top: "fc5_segm"
+  blobs_lr: 1.
+  blobs_lr: 2.
+  weight_decay: 0.
+  weight_decay: 0. 
+  inner_product_param {
+    num_output: 8192
+    weight_filler {
+      type: "gaussian_xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layers {
+  name: "relu5_segm"
+  type: RELU
+  bottom: "fc5_segm"
+  top: "fc5_segm"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "reshape"
+  type: RESHAPE
+  bottom: "fc5_segm"
+  top: "fc5_segm_reshape"
+  reshape_param {
+    channels: 128
+    height: 8
+    width: 8
+  }
+}
+layers {
+  name: "deconv6_segm"           
+  type: DECONVOLUTION
+  bottom: "fc5_segm_reshape"
+  top: "deconv6_segm"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 92
+    output_height: 16 
+    output_width: 16
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu6_segm"
+  type: RELU
+  bottom: "deconv6_segm"
+  top: "deconv6_segm"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv7_segm"           
+  type: DECONVOLUTION
+  bottom: "deconv6_segm"
+  top: "deconv7_segm"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 32
+    output_height: 32 
+    output_width: 32
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu7_segm"
+  type: RELU
+  bottom: "deconv7_segm"
+  top: "deconv7_segm"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv8_segm_new"           
+  type: DECONVOLUTION
+  bottom: "deconv7_segm"
+  top: "deconv8_segm"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 32
+    output_height: 64 
+    output_width: 64
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 8
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layers {
+  name: "relu8_segm"
+  type: RELU
+  bottom: "deconv8_segm"
+  top: "deconv8_segm"
+#   relu_param {
+#     negative_slope: 0.1
+#   }
+}
+layers {
+  name: "deconv9_segm_new"           
+  type: DECONVOLUTION
+  bottom: "deconv8_segm"
+  top: "deconv9_segm"
+  blobs_lr: 1.
+  blobs_lr: 0.
+  weight_decay: 0.
+  weight_decay: 0.
+  deconvolution_param {
+    output_channels: 3
+    output_height: 128 
+    output_width: 128
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian_xavier"
+      xavier_coeff: 0.1
+    }
+    bias_filler {
+      type: "constant"
+#       value: 0.001
+    }
+  }
+}
+layers {
+  name: "eltwise"
+  type: ELTWISE
+  bottom: "data_aug"
+  bottom: "segm_aug"
+  top: "segm_data"
+  eltwise_param {
+    operation: PROD
+  }  
+} 
+layers {
+  name: "recon_data"
+  loss_param {
+    coeff: 0.1
+  }
+  type: EUCLIDEAN_LOSS
+  bottom: "deconv9"
+  bottom: "segm_data"
+}
+layers {
+  name: "recon_segm"
+  loss_param {
+    coeff: 0.01
+  }
+  type: EUCLIDEAN_LOSS
+  bottom: "deconv9_segm"
+  bottom: "segm_aug"
+}

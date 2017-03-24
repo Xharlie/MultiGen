@@ -1,0 +1,6 @@
+*.caffemodel
+*.solverstate
+*.idea*
+*.DS_store*
+*_dataset/*
+Source*
