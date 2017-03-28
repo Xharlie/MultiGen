@@ -109,8 +109,8 @@ writting style but only be able to learn a average 7 as a concept of digit.
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png) 
-Generated:    
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png)  
+Generated: 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7914.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7924.png) 
