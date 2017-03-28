@@ -80,7 +80,7 @@ The features we have in our training set are:
   
 Result 1:  
 > Images that are contained in the training set:  
-GT:  
+GT: 
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3210.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3211.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3212.png)
@@ -105,11 +105,11 @@ Generated:
 Result 3:  
 > Images aren't contained but images with same digit and style are included in the training set:  
 Since the specific style we chosen on this 7 is not consist through all other digits, the network cannot learn the  
-writting style but only be able to learn a average 7 as a concept of digit.
+writting style but only be able to learn a average 7 as a concept of digit.  
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png)  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png) 
 Generated:    
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7914.png) 
