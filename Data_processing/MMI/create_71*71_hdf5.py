@@ -16,9 +16,9 @@ EXCLUTION = [
   # exlude digit 4, 6th form, blue for all transformation
   # [4, 5, 2, -1],
   # exlude digit 7, 10th form, all color for No.4 transformation(mirror against x axis)
-  [3, 3, -1],
+  [3, 6, -1],
   # exlude digit 2, 5th form, red for No.1 transformation(rotate90 degree)
-  [5, 0, 1]
+  [4, 4, 1]
   # exlude digit 9, 15th form, green for No.0 transformation(no transform)
   # [9, 14, 1, 0]
 ]

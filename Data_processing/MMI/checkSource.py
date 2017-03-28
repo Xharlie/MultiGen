@@ -2,13 +2,13 @@ import h5py
 from PIL import Image
 import numpy as np
 
-PERSON=2
-EMO=4
-TRANSFORM=0
+PERSON=3
+EMO=6
+TRANSFORM=2
 
 def check():
   imgArray = []
-  with h5py.File('../../Source/MMI/all_info_large.h5', 'r') as f:
+  with h5py.File('../../Source/MMI/all_info_small.h5', 'r') as f:
     imgArray = f['data']
     person = f['person']
     emotion = f['emotion']
@@ -18,7 +18,7 @@ def check():
       if (person[i][PERSON] == 1 and emotion[i][EMO] == 1 and transform[i][TRANSFORM] == 1):
         index = i
         break
-    img = (np.transpose(imgArray[index],(1,2,0)) + 0.5) * 255
+    img = np.transpose(imgArray[index],(1,2,0)) * 255
     img = Image.fromarray(img.astype(np.int8), 'RGB')
     img.show()
     # print segm.shape

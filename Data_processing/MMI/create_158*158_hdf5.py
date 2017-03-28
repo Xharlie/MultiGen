@@ -9,7 +9,7 @@ from PIL import Image
 
 IMAGE_SIZE = 158
 TARGET_SIZE = 158
-WORK_DIRECTORY = '../../MMI_dataset/dataset/'
+WORK_DIRECTORY = '../../MMI_dataset/dataset_BBG/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
 EXCLUTION = [
@@ -79,7 +79,7 @@ def load():
   print data.shape
 
   with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large.h5', 'w') as f:
-    f['data'] = train_data / 255 - 0.5
+    f['data'] = train_data / 255
     f['person'] = toOneHot(train_labels[:,0], 7)
     f['emotion'] = toOneHot(train_labels[:,1], 7)
     f['transform'] = toOneHot(train_labels[:,2], 6)

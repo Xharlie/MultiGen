@@ -9,7 +9,7 @@ layer {
   top: "transform"
   hdf5_data_param {
     source: "../../Source/MMI/all_info_small.txt"
-    batch_size: 32
+    batch_size: 8
     shuffle : true
   }
 }
@@ -41,12 +41,12 @@ layer {
 
 layer {
   name: "relu1_person"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc1_person"
   top: "fc1_person"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 layer {
   name: "fc2_person"
@@ -74,9 +74,12 @@ layer {
 }
 layer {
   name: "relu2_person"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc2_person"
   top: "fc2_person"
+  relu_param {
+     negative_slope: 0.1
+  }
 }
 
 layer {
@@ -105,12 +108,12 @@ layer {
 }
 layer {
   name: "relu1_emotion"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc1_emotion"
   top: "fc1_emotion"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+    relu_param {
+     negative_slope: 0.1
+    }
 }
 layer {
   name: "fc2_emotion"
@@ -138,12 +141,12 @@ layer {
 }
 layer {
   name: "relu2_emotion"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc2_emotion"
   top: "fc2_emotion"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 #
 #layer {
@@ -239,12 +242,12 @@ layer {
 }
 layer {
   name: "relu1_transform"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc1_transform"
   top: "fc1_transform"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 layer {
   name: "fc2_transform"
@@ -272,12 +275,12 @@ layer {
 }
 layer {
   name: "relu2_transform"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc2_transform"
   top: "fc2_transform"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 
 layer {
@@ -285,7 +288,6 @@ layer {
   type: "Concat"
   bottom: "fc2_person"
   bottom: "fc2_emotion"
-#  bottom: "fc2_color"
   bottom: "fc2_transform"
   top: "fc2"
   concat_param {
@@ -320,12 +322,12 @@ layer {
 
 layer {
   name: "relu3"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc3"
   top: "fc3"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 layer {
   name: "fc4"
@@ -353,12 +355,12 @@ layer {
 }
 layer {
   name: "relu4"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc4"
   top: "fc4"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 
 layer {
@@ -375,7 +377,7 @@ layer {
     decay_mult: 1
   }
   inner_product_param {
-    num_output: 16384
+    num_output: 32768
     weight_filler {
       type: "xavier"
     }
@@ -387,12 +389,12 @@ layer {
 }
 layer {
   name: "relu5"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "fc5"
   top: "fc5"
-#   relu_param {
-#     negative_slope: 0.1
-#   }
+   relu_param {
+     negative_slope: 0.1
+   }
 }
 layer {
   name: "reshape"
@@ -402,7 +404,7 @@ layer {
   reshape_param {
      shape {
         dim: -1
-        dim: 256
+        dim: 512
         dim: 8
         dim: 8
      }
@@ -423,7 +425,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     pad: 1
     kernel_size: 5
     stride: 2
@@ -439,9 +441,12 @@ layer {
 
 layer {
   name: "relu6"
-  type: "PReLU"
+  type: "ReLU"
   bottom: "deconv6"
   top: "deconv6"
+  relu_param {
+     negative_slope: 0.1
+  }
 }
 #
 #layer {
@@ -493,7 +498,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 92
+    num_output: 184
     pad: 1
     kernel_size: 5
     stride: 2
@@ -512,6 +517,9 @@ layer {
   type: "ReLU"
   bottom: "deconv7"
   top: "deconv7"
+  relu_param {
+     negative_slope: 0.1
+  }
 }
 
 
@@ -583,9 +591,6 @@ layer {
   type: "ReLU"
   bottom: "deconv8"
   top: "deconv8"
-   relu_param {
-     negative_slope: 0.1
-   }
 }
 #
 #layer {
