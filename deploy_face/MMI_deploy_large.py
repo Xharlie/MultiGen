@@ -18,9 +18,9 @@ def deploy():
   emotion = np.full((1, 7), 0, dtype=np.float16)
   transform = np.full((1, 6), 0, dtype=np.float16)
 
-  person[0][6] = 1
-  emotion[0][0] = 1
-  transform[0][0] = 1
+  person[0][3] = 1
+  emotion[0][3] = 1
+  transform[0][3] = 1
 
   net.blobs['person'].data[...] = person
   net.blobs['emotion'].data[...] = emotion
