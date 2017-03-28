@@ -11,7 +11,7 @@ The goal of this research is twofold:
   
 ## 2. Progress:  
 We have already successfully finished the step A by implementing the following structure in Caffe:
-![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/Deconv.png)
+![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/Deconv.png)
 
 The features we have in our training set are:
 > 1. digit: digit 0 to 9, using one-hot encoding: (0,0,0,1,0,0,0,0,0,0) represent 3
@@ -23,37 +23,37 @@ The features we have in our training set are:
 Result 1:  
 > images that are contained in the training set:  
 GT:  
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3210.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3211.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3212.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3213.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3214.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT3215.png)  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3210.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3211.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3212.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3213.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3214.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3215.png)  
 Generated:  
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3210.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3211.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3212.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3213.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3214.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN3215.png)  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3210.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3211.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3212.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3213.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3214.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3215.png)  
 
 Result 2:  
 > images aren't contained but images with same digit, form and transformation are included in the training set:  
 GT:  
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT2401.png)  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT2401.png)  
 Generated:    
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN2401.png)    
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN2401.png)    
   
 Result 3:  
 > images aren't contained but images with same digit and form are included in the training set:  
 GT:  
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT7904.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT7914.png) 
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GT7924.png)  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png)  
 Generated:    
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN7904.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN7914.png) 
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/GEN7924.png) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7904.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7914.png) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7924.png) 
   
   
 # NextStep:     
