@@ -1,4 +1,4 @@
-# MultiGen (Boosting generative network by incorporating Generative Adversarial Network and Generative Cooperative Network)
+# MultiGen (Boosting visual concept generation by incorporating Generative Adversarial Network and Generative Cooperative Network)
 ## 1. Introduction:
 This is the development repository of the research 'Multi-task Generative Network with multi-labels GANs'.  
 The goal of this research is twofold:
