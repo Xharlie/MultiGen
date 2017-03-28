@@ -1,12 +1,11 @@
-# MultiGen
+# MultiGen (Boosting generative network by incorporating Generative Adversarial Network and Generative Cooperative Network)
 ## 1. Introduction:
 This is the development repository of the research 'Multi-task Generative Network with multi-labels GANs'.  
 The goal of this research is twofold:
 > A. To create a deconvolutional generative network that could learn the features' concept by training with sufficient numbers of picture-features pairs. 
-
-> for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting style, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.  
-
-> B. By using the mechanism of GANs, we should be able to add a discriminator that undertake the multi-task-learning objective to classify the generated image to its feature classes. We would expect the discriminator to further improve the quality of the image generation. Besides, we would compare the discriminator with the classifier-alone MTL network. Since the discriminator might be able to outperform the solely classification network under the situation of data-starvation.  
+> for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting style, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.   
+ 
+> B. By using the mechanism of GANs, we would make an adversarial discriminator to play a min max game to make the result closer to the real-world photo, meanwhile, we should also be able to add a cooperative discriminator that undertake the multi-task-learning objective to classify the generated image to its feature classes. We would expect the discriminators to further improve the quality of the image generation. Besides, we would compare the discriminator with the classifier-alone MTL network. Since the discriminator might be able to outperform the solely classification network under the situation of data-starvation.  
   
   
 ## 2. Progress: 
@@ -44,7 +43,8 @@ Generated:
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-6.png)
 
 Result 2:  
-> images aren't contained but images with same person, emotion and transformation are included in the training set:  
+> images aren't included but images with same person, emotion and transformation are included in the training set:  
+This experiment is testing the network's capability to learn the manifold of a person and one of the particular transformation. 
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)  
 Generated:    
@@ -52,7 +52,9 @@ Generated:
   
 Result 3:  
 > images aren't contained but actor with different emotion and other actors with same emotion are included in the training set: 
-We can see how our network learn the manifold of an individual and a specific emotion from other individuals. 
+We can see how our network is able to learn the manifold of an individual and a specific emotion from other individuals. 
+Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
+Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
