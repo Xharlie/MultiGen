@@ -24,7 +24,7 @@ The features we have in our training set are:
   
   
 Result 1:  
-> images that are contained in the training set:  
+> Images that are contained in the training set:  
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-0.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-1.png)
@@ -43,7 +43,7 @@ Generated:
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-6.png)
 
 Result 2:  
-> images aren't included but images with same person, emotion and transformation are included in the training set:  
+> Images aren't included but images with same person, emotion and transformation are included in the training set:  
 This experiment is testing the network's capability to learn the manifold of a person and one of the particular transformation. 
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)  
@@ -51,7 +51,7 @@ Generated:
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN5-0-1.png)    
   
 Result 3:  
-> images aren't contained but actor with different emotion and other actors with same emotion are included in the training set: 
+> Images aren't contained but actor with different emotion and other actors with same emotion are included in the training set: 
 We can see how our network is able to learn the manifold of an individual and a specific emotion from other individuals. 
 Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
 Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
@@ -79,7 +79,7 @@ The features we have in our training set are:
 (0,0,0,0,1,0) means mirror against X axis  
   
 Result 1:  
-> images that are contained in the training set:  
+> Images that are contained in the training set:  
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3210.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3211.png)
@@ -96,14 +96,16 @@ Generated:
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3215.png)  
 
 Result 2:  
-> images aren't contained but images with same digit, style and transformation are included in the training set:  
+> Images aren't contained but images with same digit, style and transformation are included in the training set:  
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT2401.png)  
 Generated:    
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN2401.png)    
   
 Result 3:  
-> images aren't contained but images with same digit and style are included in the training set:  
+> Images aren't contained but images with same digit and style are included in the training set:  
+Since the specific style we chosen on this 7 is not consist through all other digits, the network cannot learn the  
+writting style but only be able to learn a average 7 as a concept of digit.
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
