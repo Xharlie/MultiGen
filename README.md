@@ -24,16 +24,16 @@ The features we have in our training set are:
   
   
 Result 1:  
-> Images that are contained in the training set:   
-GT:  
+> Images that are contained in the training set:
+</br>GT:</br>  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-0.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-1.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-2.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-3.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-4.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-5.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-6.png)   
-Generated:  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-6.png)
+</br>Generated:</br>
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-0.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-1.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-2.png)
@@ -45,22 +45,22 @@ Generated:
 Result 2:  
 > Images aren't included but images with same person, emotion and transformation are included in the training set:  
 This experiment is testing the network's capability to learn the manifold of a person and one of the particular transformation.
-</br> GT:</br> 
+</br>GT:</br> 
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)
-</br> Generated: </br>  
+</br>Generated:</br>  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN5-0-1.png)    
   
 Result 3:  
 > Images aren't included in the training set, but same actor with different emotions and other actors with same emotion are included in the training set:  
 We can see how our network is able to learn the manifold of an individual and a specific emotion from other individuals. 
 Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
-Besides, we believe implement an GANs on phase two can further enable us on this endeavour.  
-GT:
+Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
+</br>GT:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-2.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-3.png)  
-Generated:  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-3.png)
+</br>Generated:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-1.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-2.png)
@@ -79,15 +79,15 @@ The features we have in our training set are:
 (0,0,0,0,1,0) means mirror against X axis  
   
 Result 1:  
-> Images that are contained in the training set:  
-GT: 
+> Images that are contained in the training set:
+</br>GT:</br> 
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3210.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3211.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3212.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3213.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3214.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3215.png) 
-Generated:  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3215.png)
+</br>Generated:</br> 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3210.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3211.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3212.png)
@@ -96,20 +96,20 @@ Generated:
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3215.png)  
 
 Result 2:  
-> Images aren't contained but images with same digit, style and transformation are included in the training set: 
-</br> GT: </br>
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT2401.png)  
-</br> Generated: </br>
+> Images aren't contained but images with same digit, style and transformation are included in the training set:
+</br>GT:</br>
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT2401.png)
+</br>Generated:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN2401.png)    
   
 Result 3:  
 > Images aren't contained but images with same digit and style are included in the training set:  
 Since the specific style we chosen on this 7 is not consist through all other digits, the network cannot learn the  
-writting style but only be able to learn a average 7 as a concept of digit. </br>
-GT:</br>  
+writting style but only be able to learn a average 7 as a concept of digit.
+</br>GT:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png)  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7924.png)
 </br> Generated:</br> 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN7914.png) 
