@@ -54,7 +54,7 @@ Result 3:
 > Images aren't included in the training set, but same actor with different emotions and other actors with same emotion are included in the training set:  
 We can see how our network is able to learn the manifold of an individual and a specific emotion from other individuals. 
 Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
-Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
+Besides, we believe implement an GANs on phase two can further enable us on this endeavour.  
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
