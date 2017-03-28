@@ -117,11 +117,11 @@ Generated:
   
   
 # NextStep:     
-> 1. Use MMI face expression dataset to further prove the deconv generate network's ability,  
-to train on different individual's face expression and then hopefully we can generate expressions  
-that is not included for one person (but of course existed for other individuals).
+> 1. Prepare an emotion, people multi label classification discriminator as a cooperative partner. Add the classification 
+loss as part of generation loss.
   
-> 2. Add a discriminator network at the end of our generative network. The discriminator should also include  
-classification loss. By doing these, we can explore the ability of MTL GANs to provide better generative result  
-and even classification result(compared with standard classification network under data starvation).
+> 2. Add an adversarial discriminator network at the end of our generative network. 
+By doing these, we can explore the ability of GANs to provide better generative result. 
+
+> 3. Evaluate the GCN's classication accuracy and compared it with a regular classification network that have same structure.
 
