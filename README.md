@@ -34,7 +34,6 @@ GT:
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-4.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-5.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-6.png) 
-
 Generated:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-0.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-1.png)
@@ -54,12 +53,12 @@ Generated:
 Result 3:  
 > images aren't contained but actor with different emotion and other actors with same emotion are included in the training set: 
 We can see how our network learn the manifold of an individual and a specific emotion from other individuals.
-GT:  
+GT: 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-2.png)
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-3.png)  
-Generated:    
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-3.png) 
+Generated: 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-1.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-2.png)
@@ -85,7 +84,7 @@ GT:
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3212.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3213.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3214.png)
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3215.png)  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT3215.png) 
 Generated:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3210.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3211.png)
