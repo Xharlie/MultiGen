@@ -1,21 +1,78 @@
 # MultiGen
 ## 1. Introduction:
-This is the development repository of the research 'Multi-task Generative Network'.  
+This is the development repository of the research 'Multi-task Generative Network with multi-labels GANs'.  
 The goal of this research is twofold:
 > A. To create a deconvolutional generative network that could learn the features' concept by training with sufficient numbers of picture-features pairs. 
 
-> for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting form, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.  
+> for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting style, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.  
 
 > B. By using the mechanism of GANs, we should be able to add a discriminator that undertake the multi-task-learning objective to classify the generated image to its feature classes. We would expect the discriminator to further improve the quality of the image generation. Besides, we would compare the discriminator with the classifier-alone MTL network. Since the discriminator might be able to outperform the solely classification network under the situation of data-starvation.  
   
   
-## 2. Progress:  
+## 2. Progress: 
+### (2.1) Face
+We have already successfully finished the step A by implementing the following structure in Caffe:
+![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/Deconv.png) 
+ 
+The features we have in our training set are:
+> 1. person: actor 0 to 6, using one-hot encoding: (0,0,0,1,0,0,0) person 3
+> 2. emotion: each actor we choose 7 different emotion  one-hot encoding: (0,0,0,0,0,1,0) represent emotion 5, cheer
+> 3. transformation: we have no tranformation, rotate 90 degree, rotate 180, rotate 270, mirror against X axis, mirror against Y axis.
+(0,0,0,0,1,0) means mirror against X axis   
+ 
+ 
+## Our result's resolution is 158*158, which is larger and more difficult than almost all other state-of-the-art generative network!! 
+  
+  
+Result 1:  
+> images that are contained in the training set:  
+GT:  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-0.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-1.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-2.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-3.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-4.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-5.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-6.png) 
+
+Generated:  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-0.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-1.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-2.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-3.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-4.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-5.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN0-6.png)
+
+Result 2:  
+> images aren't contained but images with same person, emotion and transformation are included in the training set:  
+GT:  
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)  
+Generated:    
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN5-0-1.png)    
+  
+Result 3:  
+> images aren't contained but actor with different emotion and other actors with same emotion are included in the training set: 
+We can see how our network learn the manifold of an individual and a specific emotion from other individuals.
+GT:  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-2.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-3.png)  
+Generated:    
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-0.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-1.png) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-2.png)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-3.png)  
+ 
+
+### (2.2) Digit
 We have already successfully finished the step A by implementing the following structure in Caffe:
 ![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/Deconv.png)
 
 The features we have in our training set are:
 > 1. digit: digit 0 to 9, using one-hot encoding: (0,0,0,1,0,0,0,0,0,0) represent 3
-> 2. form: each digit we choose 10 different form, using  one-hot encoding: (0,0,0,0,0,1,0,0,0,0) represent form 5
+> 2. style: each digit we choose 10 different writing styles, using  one-hot encoding: (0,0,0,0,0,1,0,0,0,0) represent style 5
 > 3. color: we have red, green, blue three colors for each picture, (0,1,0) represent green
 > 4. transformation: we have no tranformation, rotate 90 degree, rotate 180, rotate 270, mirror against X axis, mirror against Y axis.
 (0,0,0,0,1,0) means mirror against X axis  
@@ -38,14 +95,14 @@ Generated:
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN3215.png)  
 
 Result 2:  
-> images aren't contained but images with same digit, form and transformation are included in the training set:  
+> images aren't contained but images with same digit, style and transformation are included in the training set:  
 GT:  
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT2401.png)  
 Generated:    
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GEN2401.png)    
   
 Result 3:  
-> images aren't contained but images with same digit and form are included in the training set:  
+> images aren't contained but images with same digit and style are included in the training set:  
 GT:  
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7904.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/GT7914.png) 
