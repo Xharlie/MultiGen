@@ -25,7 +25,7 @@ The features we have in our training set are:
   
 Result 1:  
 > Images that are contained in the training set:
-</br>GT:</br>  
+</br>GT:</br>
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-0.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-1.png)
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT0-2.png)
@@ -45,9 +45,9 @@ Result 1:
 Result 2:  
 > Images aren't included but images with same person, emotion and transformation are included in the training set:  
 This experiment is testing the network's capability to learn the manifold of a person and one of the particular transformation.
-</br>GT:</br> 
+</br>GT:</br>
 ![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)
-</br>Generated:</br>  
+</br>Generated:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN5-0-1.png)    
   
 Result 3:  
