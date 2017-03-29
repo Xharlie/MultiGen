@@ -6,6 +6,8 @@ The goal of this research is twofold:
 > for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting style, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.   
  
 > B. By using the mechanism of GANs, we would make an adversarial discriminator to play a min max game to make the result closer to the real-world photo, meanwhile, we should also be able to add a cooperative discriminator that undertake the multi-task-learning objective to classify the generated image to its feature classes. We would expect the discriminators to further improve the quality of the image generation. Besides, we would compare the discriminator with the classifier-alone MTL network. Since the discriminator might be able to outperform the solely classification network under the situation of data-starvation.  
+For The Concept of Generative Cooperative Network: Here we use the multi-task Alex Net as the cooperative discriminator
+</br>![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GCN.png)
   
   
 ## 2. Progress: 
