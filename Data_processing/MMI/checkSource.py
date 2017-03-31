@@ -4,7 +4,7 @@ import numpy as np
 
 PERSON=3
 EMO=6
-TRANSFORM=2
+TRANSFORM=1
 
 def check():
   imgArray = []
