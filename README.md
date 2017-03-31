@@ -1,6 +1,6 @@
 # MultiGen (Boosting visual concept generation by incorporating Generative Adversarial Network and Generative Cooperative Network)
 ## 1. Introduction:
-This is the development repository of the research 'Multi-task Generative Network with multi-labels GANs'.  
+This is the development repository of the research 'MultiGen'.  
 The goal of this research is twofold:
 > A. To create a deconvolutional generative network that could learn the features' concept by training with sufficient numbers of picture-features pairs. 
 > for example, using the MNIST dataset, ideally with the input of feature arrays(digit, handwritting style, color, transformation) and corresponding images of digits, we could not only train a deconv net to generate an identical image given the features that included in the training set, but also, generate the correct image out of the training set.   
