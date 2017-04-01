@@ -6,7 +6,7 @@ layer {
   top: "data"
   top: "person"
   top: "emotion"
-  top: "version"
+  top: "session"
   top: "transform"
   hdf5_data_param {
     source: "../../Source/KDEF/all_info_small_3emo.txt"
@@ -151,10 +151,10 @@ layer {
 }
 #
 layer {
-  name: "fc1_version"
+  name: "fc1_session"
   type: "InnerProduct"
-  bottom: "version"
-  top: "fc1_version"
+  bottom: "session"
+  top: "fc1_session"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -175,20 +175,20 @@ layer {
   }
 }
 layer {
-  name: "relu1_version"
+  name: "relu1_session"
   type: "ReLU"
-  bottom: "fc1_version"
-  top: "fc1_version"
+  bottom: "fc1_session"
+  top: "fc1_session"
    relu_param {
      negative_slope: 0.1
    }
 }
 
 layer {
-  name: "fc2_version"
+  name: "fc2_session"
   type: "InnerProduct"
-  bottom: "fc1_version"
-  top: "fc2_version"
+  bottom: "fc1_session"
+  top: "fc2_session"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -209,10 +209,10 @@ layer {
   }
 }
 layer {
-  name: "relu2_version"
+  name: "relu2_session"
   type: "ReLU"
-  bottom: "fc2_version"
-  top: "fc2_version"
+  bottom: "fc2_session"
+  top: "fc2_session"
    relu_param {
      negative_slope: 0.1
    }
@@ -290,7 +290,7 @@ layer {
   type: "Concat"
   bottom: "fc2_person"
   bottom: "fc2_emotion"
-  bottom: "fc2_version"
+  bottom: "fc2_session"
   bottom: "fc2_transform"
   top: "fc2"
   concat_param {
