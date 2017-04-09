@@ -1,5 +1,5 @@
 # deconv: output_size = (input_size - 1) * stride + kernel_size - 2 * pad
-name: "DeconvMultiGenFaceNet"
+#name: "DeconvMultiGenFaceNet"
 #layer {
 #  name: "data"
 #  type: "HDF5Data"
@@ -8,8 +8,8 @@ name: "DeconvMultiGenFaceNet"
 #  top: "emotion"
 #  top: "transform"
 #  hdf5_data_param {
-#    source: "../../Source/MMI/all_info_large.txt"
-#    batch_size: 8
+#    source: "../Source/MMI/all_info.txt"
+#    batch_size: 32
 #    shuffle : true
 #  }
 #}
@@ -21,7 +21,7 @@ layer {
     input_param {
         shape: {
             dim: 1
-            dim: 7
+            dim: 70
         }
     }
 }
@@ -33,7 +33,19 @@ layer {
     input_param {
         shape: {
             dim: 1
-            dim: 7
+            dim: 3
+        }
+    }
+}
+
+layer {
+    name: "session"
+    type: "Input"
+    top: "session"
+    input_param {
+        shape: {
+            dim: 1
+            dim: 2
         }
     }
 }
@@ -49,7 +61,6 @@ layer {
         }
     }
 }
-
 layer {
   name: "fc1_person"
   type: "InnerProduct"
@@ -113,6 +124,9 @@ layer {
   type: "ReLU"
   bottom: "fc2_person"
   top: "fc2_person"
+  relu_param {
+     negative_slope: 0.1
+  }
 }
 
 layer {
@@ -144,9 +158,9 @@ layer {
   type: "ReLU"
   bottom: "fc1_emotion"
   top: "fc1_emotion"
-   relu_param {
+    relu_param {
      negative_slope: 0.1
-   }
+    }
 }
 layer {
   name: "fc2_emotion"
@@ -182,72 +196,73 @@ layer {
    }
 }
 #
-#layer {
-#  name: "fc1_color"
-#  type: "InnerProduct"
-#  bottom: "color"
-#  top: "fc1_color"
-#  param {
-#    lr_mult: 1
-#    decay_mult: 1
-#  }
-#  param {
-#    lr_mult: 1
-#    decay_mult: 1
-#  }
-#  inner_product_param {
-#    num_output: 128
-#    weight_filler {
-#      type: "xavier"
-#    }
-#    bias_filler {
-#      type: "constant"
-#      value: 0
-#    }
-#  }
-#}
-#layer {
-#  name: "relu1_color"
-#  type: "PReLU"
-#  bottom: "fc1_color"
-#  top: "fc1_color"
-##   relu_param {
-##     negative_slope: 0.1
-##   }
-#}
-#layer {
-#  name: "fc2_color"
-#  type: "InnerProduct"
-#  bottom: "fc1_color"
-#  top: "fc2_color"
-#  param {
-#    lr_mult: 1
-#    decay_mult: 1
-#  }
-#  param {
-#    lr_mult: 1
-#    decay_mult: 1
-#  }
-#  inner_product_param {
-#    num_output: 128
-#    weight_filler {
-#      type: "xavier"
-#    }
-#    bias_filler {
-#      type: "constant"
-#      value: 0
-#    }
-#  }
-#}
-#layer {
-#  name: "relu2_color"
-#  type: "PReLU"
-#  bottom: "fc2_color"
-#  top: "fc2_color"
-##   relu_param {
-##     negative_slope: 0.1
-##   }
-#}
+layer {
+  name: "fc1_session"
+  type: "InnerProduct"
+  bottom: "session"
+  top: "fc1_session"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  inner_product_param {
+    num_output: 128
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1_session"
+  type: "ReLU"
+  bottom: "fc1_session"
+  top: "fc1_session"
+   relu_param {
+     negative_slope: 0.1
+   }
+}
+
+layer {
+  name: "fc2_session"
+  type: "InnerProduct"
+  bottom: "fc1_session"
+  top: "fc2_session"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  inner_product_param {
+    num_output: 128
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu2_session"
+  type: "ReLU"
+  bottom: "fc2_session"
+  top: "fc2_session"
+   relu_param {
+     negative_slope: 0.1
+   }
+}
 
 layer {
   name: "fc1_transform"
@@ -321,7 +336,7 @@ layer {
   type: "Concat"
   bottom: "fc2_person"
   bottom: "fc2_emotion"
-#  bottom: "fc2_color"
+  bottom: "fc2_session"
   bottom: "fc2_transform"
   top: "fc2"
   concat_param {
@@ -411,7 +426,7 @@ layer {
     decay_mult: 1
   }
   inner_product_param {
-    num_output: 16384
+    num_output: 32768
     weight_filler {
       type: "xavier"
     }
@@ -438,7 +453,7 @@ layer {
   reshape_param {
      shape {
         dim: -1
-        dim: 256
+        dim: 512
         dim: 8
         dim: 8
      }
@@ -459,7 +474,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 256
+    num_output: 512
     pad: 0
     kernel_size: 5
     stride: 2
@@ -532,7 +547,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 92
+    num_output: 184
     pad: 1
     kernel_size: 5
     stride: 2
@@ -553,7 +568,7 @@ layer {
   top: "deconv7"
   relu_param {
      negative_slope: 0.1
-   }
+  }
 }
 
 
@@ -607,7 +622,7 @@ layer {
     decay_mult: 1
   }
   convolution_param {
-    num_output: 92
+    num_output: 184
     pad: 1
     kernel_size: 5
     stride: 2
@@ -620,15 +635,7 @@ layer {
     }
   }
 }
-layer {
-  name: "relu8"
-  type: "ReLU"
-  bottom: "deconv8"
-  top: "deconv8"
-   relu_param {
-     negative_slope: 0.1
-   }
-}
+
 #
 #layer {
 #  name: "conv8"
@@ -658,12 +665,15 @@ layer {
 #  }
 #}
 #
-#layer {
-#  name: "relu8"
-#  type: "ReLU"
-#  bottom: "deconv8"
-#  top: "deconv8"
-#}
+layer {
+  name: "relu8"
+  type: "ReLU"
+  bottom: "deconv8"
+  top: "deconv8"
+  relu_param {
+    negative_slope: 0.1
+  }
+}
 #
 layer {
   name: "deconv9_new"
@@ -692,13 +702,6 @@ layer {
     }
   }
 }
-#
-#layer {
-#  name: "relu9"
-#  type: "PReLU"
-#  bottom: "deconv9"
-#  top: "deconv9"
-#}
 
 #layer {
 #  name: "recon_data"
@@ -745,4 +748,7 @@ layer {
 #  top: "Seg_loss"
 #  loss_weight: 1
 #}
+
+
+
 

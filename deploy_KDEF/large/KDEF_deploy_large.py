@@ -10,20 +10,28 @@ ORI_SHAPE = 600
 SHAPE = 384
 PIXEL_DEPTH = 255
 
+# [37, 2, -1],
+# [4, 0, 1],
+# [56, 1, -1],
+# [55, 0, -1],
+
 def deploy():
   caffe.set_mode_cpu()
-  net = caffe.Net('multiGen_face_deploy_net_large.prototxt', 'snapshop_iter_18256.caffemodel', caffe.TRAIN)
+  net = caffe.Net('multiGen_face_deploy_net_large.oneSession.prototxt', 'snapshop_iter_7580.oneSession.caffemodel', caffe.TRAIN)
 
-  person = np.full((1, 7), 0, dtype=np.float16)
-  emotion = np.full((1, 7), 0, dtype=np.float16)
+  person = np.full((1, 70), 0, dtype=np.float16)
+  emotion = np.full((1, 3), 0, dtype=np.float16)
+  # session = np.full((1, 2), 0, dtype=np.float16)
   transform = np.full((1, 6), 0, dtype=np.float16)
 
-  person[0][3] = 1
-  emotion[0][3] = 1
-  transform[0][3] = 1
+  person[0][37] = 1
+  emotion[0][2] = 1
+  # session[0][0] = 1
+  transform[0][0] = 1
 
   net.blobs['person'].data[...] = person
   net.blobs['emotion'].data[...] = emotion
+  # net.blobs['session'].data[...] = session
   net.blobs['transform'].data[...] = transform
 
   resultImage = net.forward()
@@ -36,8 +44,8 @@ def deploy():
   # img.show()
 
   result = resultImage["deconv9"][0]
-  result = ((np.transpose(result,(1,2,0))) + 0.5) * 255
-  print result[1]
+  result = np.transpose(result,(1,2,0)) * 255
+  print result[0]
   img = PIL.Image.fromarray(result.astype(np.int8), 'RGB')
   img.show()
 
