@@ -4,12 +4,12 @@ import numpy as np
 
 PERSON=16
 EMO=0
-SES=1
+SES=0
 TRANSFORM=0
 
 def check():
   imgArray = []
-  with h5py.File('../../Source/AlexPretrain/all_info_small_3emo_secondSession.h5', 'r') as f:
+  with h5py.File('../../Source/AlexPretrain/all_info_large_3emo_firstSession.h5', 'r') as f:
     imgArray = f['data']
     person = f['person']
     emotion = f['emotion']
