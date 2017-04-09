@@ -589,12 +589,7 @@ layer {
     }
   }
 }
-layer {
-  name: "relu8"
-  type: "ReLU"
-  bottom: "deconv8"
-  top: "deconv8"
-}
+
 #
 #layer {
 #  name: "conv8"
