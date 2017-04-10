@@ -15,12 +15,13 @@ For The Concept of Generative Cooperative Network: Here we use the multi-task Al
 We have already successfully finished the step A by implementing the following structure in Caffe:
 ![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/Deconv.png) 
  
-The features we have in our training set are:
+The features we have in our training set are: MMI
 > 1. person: actor 0 to 6, using one-hot encoding: (0,0,0,1,0,0,0) person 3
 > 2. emotion: each actor we choose 7 different emotion  one-hot encoding: (0,0,0,0,0,1,0) represent emotion 5, cheer
 > 3. transformation: we have no tranformation, rotate 90 degree, rotate 180, rotate 270, mirror against X axis, mirror against Y axis.
 (0,0,0,0,1,0) means mirror against X axis   
- 
+</br> 
+ANOTHER larger Dataset we used is KDEF, which contain 70 actors with 7 facial expression.
  
 ## Our result's resolution is 158*158, which is larger and more difficult than almost all other state-of-the-art generative network!! 
   
@@ -47,16 +48,21 @@ Result 1:
 Result 2:  
 > Images aren't included but images with same person, emotion and transformation are included in the training set:  
 This experiment is testing the network's capability to learn the manifold of a person and one of the particular transformation.
+Since MMI's dataset is too small and make it hard to get a clear rotation generation result, here, we use KDEF's result to demonstrate.
 </br>Ground Truth:</br>
-![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT5-0-1.png)
+![Image of GT](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt4-0-1.JPG)
 </br>Generated:</br>
-![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN5-0-1.png)    
-  
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn4-0-1.JPG)    
+
+
+
 Result 3:  
 > Images aren't included in the training set, but same actor with different emotions and other actors with same emotion are included in the training set:  
 We can see how our network is able to learn the manifold of an individual and a specific emotion from other individuals. 
 Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
 Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
+
+## Very small dataset: MMI </br>
 </br>Ground Truth:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
@@ -67,8 +73,43 @@ Besides, we believe implement an GANs on phase two can further enable us on this
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-1.png) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-2.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-3.png)  
- 
+</br> We can see that the result is fuzzy, but the expression concept of supprise is preliminarily captured.
 
+## larger dataset: KDEF </br>
+<br>(1)Concept generation: Supprise
+</br>Ground Truth:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-3.JPG)
+</br>Generated:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-3.JPG)
+<br><br>(2)Concept generation: Happy
+</br>Ground Truth:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-3.JPG)
+</br>Generated:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-3.JPG)
+<br><br>(3)Concept generation: Aversion
+</br>Ground Truth:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-3.JPG)
+</br>Generated:</br>
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-0.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-1.JPG) 
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-2.JPG)
+![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-3.JPG)
+</br>
 ### (2.2) Digit
 We have already successfully finished the step A by implementing the following structure in Caffe:
 ![Image of Deconv](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/digit/Deconv.png)
