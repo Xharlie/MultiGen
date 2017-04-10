@@ -62,7 +62,7 @@ We can see how our network is able to learn the manifold of an individual and a 
 Meanwhile, we can see the generated result is a bit fuzzy and we are working toward a result that closer to the real-world photo. 
 Besides, we believe implement an GANs on phase two can further enable us on this endeavour.
 
-## Very small dataset: MMI </br>
+<br>Very small dataset: MMI </br>
 </br>Ground Truth:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-0.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GT3-3-1.png) 
@@ -74,15 +74,14 @@ Besides, we believe implement an GANs on phase two can further enable us on this
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-2.png)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/face/GEN3-3-3.png)  
 </br> We can see that the result is fuzzy, but the expression concept of supprise is preliminarily captured.
-
-## larger dataset: KDEF </br>
+<br> larger dataset: KDEF </br>
 <br>(1)Concept generation: Supprise
 </br>Ground Truth:</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-0.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-2.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt37-2-3.JPG)
-</br>Generated:</br>
+</br>Generated:(we can clearly see since average actor's mouth doesn't open as large as this actor, the generated supprising expression for this actor has average opened mouth and personal facial feature preserved.)</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-0.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn37-2-2.JPG)
@@ -93,7 +92,7 @@ Besides, we believe implement an GANs on phase two can further enable us on this
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-2.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt56-1-3.JPG)
-</br>Generated:</br>
+</br>Generated: happy face by far has the best performance among other expressions.</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-0.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn56-1-2.JPG)
@@ -104,7 +103,7 @@ Besides, we believe implement an GANs on phase two can further enable us on this
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-2.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gt55-0-3.JPG)
-</br>Generated:</br>
+</br>Generated: since different actors' aversion expression always have different grin direction, the generated grin looks a little surreal for this person</br>
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-0.JPG)
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-1.JPG) 
 ![Image of GEN](https://github.com/Xharlie/MultiGen/blob/master/README_IMG/KDEF/gn55-0-2.JPG)
