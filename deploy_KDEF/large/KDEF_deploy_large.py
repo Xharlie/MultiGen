@@ -17,21 +17,21 @@ PIXEL_DEPTH = 255
 
 def deploy():
   caffe.set_mode_cpu()
-  net = caffe.Net('multiGen_face_deploy_net_large.oneSession.prototxt', 'snapshop_iter_7580.oneSession.caffemodel', caffe.TRAIN)
+  net = caffe.Net('multiGen_face_deploy_net_large.twoSession.prototxt', 'snapshop_iter_7560.twoSession.caffemodel', caffe.TRAIN)
 
   person = np.full((1, 70), 0, dtype=np.float16)
   emotion = np.full((1, 3), 0, dtype=np.float16)
-  # session = np.full((1, 2), 0, dtype=np.float16)
+  session = np.full((1, 2), 0, dtype=np.float16)
   transform = np.full((1, 6), 0, dtype=np.float16)
 
-  person[0][37] = 1
-  emotion[0][2] = 1
-  # session[0][0] = 1
-  transform[0][0] = 1
+  person[0][55] = 1
+  emotion[0][0] = 1
+  session[0][0] = 1
+  transform[0][3] = 1
 
   net.blobs['person'].data[...] = person
   net.blobs['emotion'].data[...] = emotion
-  # net.blobs['session'].data[...] = session
+  net.blobs['session'].data[...] = session
   net.blobs['transform'].data[...] = transform
 
   resultImage = net.forward()

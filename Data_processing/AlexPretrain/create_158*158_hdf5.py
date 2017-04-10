@@ -9,22 +9,29 @@ from PIL import Image
 
 IMAGE_SIZE = 158
 TARGET_SIZE = 158
-WORK_DIRECTORY = '../../MMI_dataset/dataset_BBG/'
+WORK_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
 EXCLUTION = [
-  # exlude digit 4, 6th form, blue for all transformation
-  # [4, 5, 2, -1],
-  # exlude digit 7, 10th form, all color for No.4 transformation(mirror against x axis)
-  [3, 3, -1],
-  # exlude digit 2, 5th form, red for No.1 transformation(rotate90 degree)
-  [5, 0, 1]
-  # exlude digit 9, 15th form, green for No.0 transformation(no transform)
-  # [9, 14, 1, 0]
+
+  ## exclude pics have problems:
+  [0,-1,-1,-1],
+  [14,-1,-1,-1],
+  [23,-1,-1,-1],
+  [27,-1,-1,-1],
+  [28,-1,-1,-1],
+  [42,-1,-1,-1],
+  [52,-1,-1,-1],
+  # exclude emotion 3,4,5,6,7
+  [-1, 3, -1, -1],
+  [-1, 4, -1, -1],
+  [-1, 5, -1, -1],
+  [-1, 6, -1, -1],
+  [-1, 7, -1, -1],
 ]
-EMO_SIZE = 7
-SAMPLE_SIZE = 7 * EMO_SIZE * 6 - 1 * 6 - 1
-SOURCE_FOLDER_PREFIX = '../../Source/MMI/'
+EMO_SIZE = 3
+SAMPLE_SIZE = 2*(70 * EMO_SIZE * 6 - 7 * EMO_SIZE * 6)
+SOURCE_FOLDER_PREFIX = '../../Source/AlexPretrain/'
 
 def matchExclusion(testee):
   for tester in EXCLUTION:
@@ -34,7 +41,8 @@ def matchExclusion(testee):
         break
       else:
         count = count + 1
-    if count == 3:
+    if count == 4:
+      print testee
       return True
   return False
 
@@ -42,19 +50,19 @@ def extract_data(dir, num_images):
   """Extract the images into a 4D tensor [image index, y, x, channels].
   """
   data = numpy.zeros((num_images, TARGET_SIZE, TARGET_SIZE, NUM_CHANNELS), dtype=numpy.int16)
-  labels = numpy.zeros((num_images, 2), dtype=numpy.int8)
+  labels = numpy.zeros((num_images, 3), dtype=numpy.int8)
   count = 0
   files = os.listdir(dir)
   for filename in files:
     file_path = os.path.join(dir, filename)
-    if filename.endswith("png"):
+    if filename.endswith("JPG"):
       img = Image.open(file_path)
-      # img.thumbnail([TARGET_SIZE,TARGET_SIZE], Image.ANTIALIAS)
       data[count] = img.convert('RGB')
       parsed = re.findall(r"[\w']+", filename)
       print parsed
       labels[count][0] = parsed[0]
       labels[count][1] = parsed[1]
+      labels[count][2] = parsed[2]
       print labels[count]
       count = count + 1
   return data, labels
@@ -72,20 +80,21 @@ def extract_data(dir, num_images):
 
 def load():
 
-  data, labels = extract_data(WORK_DIRECTORY, 49)
+  data, labels = extract_data(WORK_DIRECTORY, 980)
 
   train_data, train_labels = augmentImage(
     data, labels)
-  print data.shape
+  print train_data.shape
 
-  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large.h5', 'w') as f:
-    f['data'] = train_data / 255
-    f['person'] = toOneHot(train_labels[:,0], 7)
-    f['emotion'] = toOneHot(train_labels[:,1], 7)
-    f['transform'] = toOneHot(train_labels[:,2], 6)
+  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo.h5', 'w') as f:
+    f['data'] = train_data / PIXEL_DEPTH
+    f['person'] = toOneHot(train_labels[:,0], 70)
+    f['emotion'] = train_labels[:,1]
+    f['session'] = train_labels[:,2]
+    f['transform'] = toOneHot(train_labels[:,3], 6)
 
-  with open(SOURCE_FOLDER_PREFIX + 'all_info_large.txt', 'w') as f:
-    f.write("../../Source/MMI/" + 'all_info_large.h5' + "\n")
+  with open(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo.txt', 'w') as f:
+    f.write("../../Source/AlexPretrain/" + 'all_info_large_3emo.h5' + "\n")
 
 def toOneHot(labels, choices):
   one_hot = numpy.zeros((labels.shape[0], choices), dtype=numpy.int8)
@@ -95,18 +104,18 @@ def toOneHot(labels, choices):
 
 def augmentImage(images, labels):
   augmented_images = numpy.zeros((SAMPLE_SIZE, images.shape[1], images.shape[2], 3), dtype=numpy.float16)
-  augmented_labels = numpy.zeros((SAMPLE_SIZE, 3), dtype=numpy.int8)
+  augmented_labels = numpy.zeros((SAMPLE_SIZE, 4), dtype=numpy.int8)
   amount = 0
   for i in range(0, images.shape[0]):
     for transformIndex in range(0, 6):
-      if matchExclusion([labels[i][0], labels[i][1], transformIndex]):
+      if matchExclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]):
         # img = (augment(images[i], segm[i], colorIndex, transformIndex)[0]) * 255
         # img = Image.fromarray(img.astype(numpy.int8), 'RGB')
         # img.show()
         print [labels[i][0], labels[i][1], transformIndex]
         continue
       augmented_images[amount] = augment(images[i], transformIndex)
-      augmented_labels[amount] = [labels[i][0], labels[i][1], transformIndex]
+      augmented_labels[amount] = [labels[i][0], labels[i][1], labels[i][2], transformIndex]
       amount = amount + 1
   print amount
   return numpy.transpose(augmented_images, (0, 3, 1, 2)), augmented_labels

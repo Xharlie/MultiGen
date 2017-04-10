@@ -2,7 +2,7 @@ import h5py
 from PIL import Image
 import numpy as np
 
-PERSON=16
+PERSON=7
 EMO=0
 SES=0
 TRANSFORM=0
