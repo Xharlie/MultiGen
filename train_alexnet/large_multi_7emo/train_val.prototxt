@@ -467,10 +467,10 @@ layer {
 }
 
 layer {
-  name: "transformclassClassloss"
+  name: "transformClassloss"
   type: "SoftmaxWithLoss"
   bottom: "fc8_transformclass"
   bottom: "transformclass"
-  top: "transformclassClassloss"
+  top: "transformclassloss"
 }
 
