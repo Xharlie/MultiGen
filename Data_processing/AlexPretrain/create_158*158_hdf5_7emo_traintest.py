@@ -12,29 +12,81 @@ TARGET_SIZE = 158
 WORK_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
-EXCLUTION = [
-
+SESSION='test'
+EXCLUSION = [
+  # ## exclude session0
+  # [-1,-1,0,-1],
+  ## exclude session1
+  # [-1,-1,1,-1],
   ## exclude pics have problems:
-  [0,-1,-1,-1],
-  [14,-1,-1,-1],
-  [23,-1,-1,-1],
-  [27,-1,-1,-1],
-  [28,-1,-1,-1],
+  [18,-1,-1,-1],
+  [19,-1,-1,-1],
+  [25,-1,-1,-1],
   [42,-1,-1,-1],
   [52,-1,-1,-1],
   # exclude emotion 3,4,5,6,7
-  [-1, 3, -1, -1],
-  [-1, 4, -1, -1],
-  [-1, 5, -1, -1],
-  [-1, 6, -1, -1],
-  [-1, 7, -1, -1],
+  # [-1, 3, -1, -1],
+  # [-1, 4, -1, -1],
+  # [-1, 5, -1, -1],
+  # [-1, 6, -1, -1],
+  # [-1, 7, -1, -1],
+
+  # exclude test set
+  [4, 0, -1, -1],
+  [8, 1, -1, -1],
+  [12, 2, -1, -1],
+  [16, 3, -1, -1],
+  [20, 4, -1, -1],
+  [24, 5, -1, -1],
+  [28, 6, -1, -1],
+  [32, 0, -1, -1],
+  [36, 1, -1, -1],
+  [40, 2, -1, -1],
+  [44, 3, -1, -1],
+  [48, 4, -1, -1],
+  [56, 5, -1, -1],
+  [60, 6, -1, -1],
+  [64, 0, -1, -1],
+  [68, 1, -1, -1]
 ]
-EMO_SIZE = 3
-SAMPLE_SIZE = 2*(70 * EMO_SIZE * 6 - 7 * EMO_SIZE * 6)
+INCLUSION = [
+[4, 0, -1, -1],
+  [8, 1, -1, -1],
+  [12, 2, -1, -1],
+  [16, 3, -1, -1],
+  [20, 4, -1, -1],
+  [24, 5, -1, -1],
+  [28, 6, -1, -1],
+  [32, 0, -1, -1],
+  [36, 1, -1, -1],
+  [40, 2, -1, -1],
+  [44, 3, -1, -1],
+  [48, 4, -1, -1],
+  [56, 5, -1, -1],
+  [60, 6, -1, -1],
+  [64, 0, -1, -1],
+  [68, 1, -1, -1]
+]
+EMO_SIZE = 7
+TRANS = 4
+SAMPLE_SIZE = 2 * (16 * TRANS)
 SOURCE_FOLDER_PREFIX = '../../Source/AlexPretrain/'
 
 def matchExclusion(testee):
-  for tester in EXCLUTION:
+  for tester in EXCLUSION:
+    count = 0
+    for i in range(0, len(tester)):
+      if testee[i] != tester[i] and tester[i] != -1:
+        break
+      else:
+        count = count + 1
+    if count == 4:
+      print testee
+      return True
+  return False
+
+def matchInclusion(testee):
+  for tester in INCLUSION:
     count = 0
     for i in range(0, len(tester)):
       if testee[i] != tester[i] and tester[i] != -1:
@@ -86,15 +138,17 @@ def load():
     data, labels)
   print train_data.shape
 
-  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo.h5', 'w') as f:
+  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_7emo_'+SESSION+'Session.h5', 'w') as f:
     f['data'] = train_data / PIXEL_DEPTH
     f['person'] = toOneHot(train_labels[:,0], 70)
-    f['emotion'] = train_labels[:,1]
-    f['session'] = train_labels[:,2]
-    f['transform'] = toOneHot(train_labels[:,3], 6)
+    f['personclass'] = train_labels[:,0]
+    f['emotion'] = toOneHot(train_labels[:,1], 7)
+    f['emotionclass'] = train_labels[:,1]
+    f['transform'] = toOneHot(train_labels[:,3], 4)
+    f['transformclass'] = train_labels[:,3]
 
-  with open(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo.txt', 'w') as f:
-    f.write("../../Source/AlexPretrain/" + 'all_info_large_3emo.h5' + "\n")
+  with open(SOURCE_FOLDER_PREFIX + 'all_info_large_7emo_'+SESSION+'Session.txt', 'w') as f:
+    f.write("../../Source/AlexPretrain/" + 'all_info_large_7emo_'+SESSION+'Session.h5' + "\n")
 
 def toOneHot(labels, choices):
   one_hot = numpy.zeros((labels.shape[0], choices), dtype=numpy.int8)
@@ -107,8 +161,8 @@ def augmentImage(images, labels):
   augmented_labels = numpy.zeros((SAMPLE_SIZE, 4), dtype=numpy.int8)
   amount = 0
   for i in range(0, images.shape[0]):
-    for transformIndex in range(0, 6):
-      if matchExclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]):
+    for transformIndex in range(0, 4):
+      if matchInclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]) == False:
         # img = (augment(images[i], segm[i], colorIndex, transformIndex)[0]) * 255
         # img = Image.fromarray(img.astype(numpy.int8), 'RGB')
         # img.show()
@@ -123,10 +177,10 @@ def augmentImage(images, labels):
 def augment(image, transformIndex):
   if transformIndex < 4:
     image = numpy.rot90(image, transformIndex)
-  elif transformIndex == 5:
-    image = numpy.fliplr(image)
-  else:
-    image = numpy.flipud(image)
+  # elif transformIndex == 5:
+  #   image = numpy.fliplr(image)
+  # else:
+  #   image = numpy.flipud(image)
   return image
 
 
