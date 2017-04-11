@@ -12,12 +12,12 @@ TARGET_SIZE = 158
 WORK_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
-SESSION='first'
+SESSION='second'
 EXCLUTION = [
-  # ## exclude session0
-  # [-1,-1,0,-1],
-  ## exclude session1
-  [-1,-1,1,-1],
+  ## exclude session0
+  [-1,-1,0,-1],
+  # ## exclude session1
+  # [-1,-1,1,-1],
   ## exclude pics have problems:
   [0,-1,-1,-1],
   [14,-1,-1,-1],
@@ -26,16 +26,21 @@ EXCLUTION = [
   [28,-1,-1,-1],
   [42,-1,-1,-1],
   [52,-1,-1,-1],
-  # exclude emotion 3,4,5,6,7
+  ## exclude emotion 3,4,5,6,7
   [-1, 3, -1, -1],
   [-1, 4, -1, -1],
   [-1, 5, -1, -1],
   [-1, 6, -1, -1],
   [-1, 7, -1, -1],
+  ## to test capability
+  [37, 2, -1, -1],
+  [4, 0, -1, 1],
+  [56, 1, -1, -1],
+  [55, 0, -1, -1],
 ]
 EMO_SIZE = 3
-SAMPLE_SIZE = 70 * EMO_SIZE * 6 - 7 * EMO_SIZE * 6
-SOURCE_FOLDER_PREFIX = '../../Source/AlexPretrain/'
+SAMPLE_SIZE = 70 * EMO_SIZE * 6 - 7 * EMO_SIZE * 6 - 6 * 3 - 1
+SOURCE_FOLDER_PREFIX = '../../Source/KDEF/'
 
 def matchExclusion(testee):
   for tester in EXCLUTION:
@@ -93,12 +98,11 @@ def load():
   with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo_'+SESSION+'Session.h5', 'w') as f:
     f['data'] = train_data / PIXEL_DEPTH
     f['person'] = toOneHot(train_labels[:,0], 70)
-    f['personclass'] = train_labels[:,0]
-    f['emotion'] = train_labels[:,1]
+    f['emotion'] = toOneHot(train_labels[:,1], 3)
     f['transform'] = toOneHot(train_labels[:,3], 6)
 
   with open(SOURCE_FOLDER_PREFIX + 'all_info_large_3emo_'+SESSION+'Session.txt', 'w') as f:
-    f.write("../../Source/AlexPretrain/" + 'all_info_large_3emo_'+SESSION+'Session.h5' + "\n")
+    f.write("../../Source/KDEF/" + 'all_info_large_3emo_'+SESSION+'Session.h5' + "\n")
 
 def toOneHot(labels, choices):
   one_hot = numpy.zeros((labels.shape[0], choices), dtype=numpy.int8)
