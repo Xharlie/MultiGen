@@ -3,8 +3,9 @@ layer {
   name: "data"
   type: "HDF5Data"
   top: "data"
-  top: "emotion"
   top: "personclass"
+  top: "emotionclass"
+  top: "transformclass"
   include {
     phase: TRAIN
   }
@@ -14,7 +15,7 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_3emo_secondSession.txt"
+    source: "../../Source/AlexPretrain/all_info_large_7emo_trainSession.txt"
     batch_size: 64
     shuffle : true
   }
@@ -36,7 +37,7 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_3emo_firstSession.txt"
+    source: "../../Source/AlexPretrain/all_info_large_7emo_testSession.txt"
     batch_size: 32
   }
 }
@@ -440,7 +441,7 @@ layer {
   name: "emotion_accuracy"
   type: "Accuracy"
   bottom: "fc8_emotion"
-  bottom: "emotion"
+  bottom: "emotionclass"
   top: "emotion_accuracy"
   include {
     phase: TEST
@@ -450,7 +451,7 @@ layer {
   name: "emotionClassloss"
   type: "SoftmaxWithLoss"
   bottom: "fc8_emotion"
-  bottom: "emotion"
+  bottom: "emotionclass"
   top: "emotionClassloss"
 }
 
@@ -469,7 +470,7 @@ layer {
   name: "transformclassClassloss"
   type: "SoftmaxWithLoss"
   bottom: "fc8_transformclass"
-  bottom: "transformclassclass"
+  bottom: "transformclass"
   top: "transformclassClassloss"
 }
 
