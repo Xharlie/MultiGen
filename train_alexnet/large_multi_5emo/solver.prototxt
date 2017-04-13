@@ -1,0 +1,17 @@
+net: "train_val.prototxt"
+test_iter: 100
+test_interval: 1000
+lr_policy: "step"
+base_lr: 0.001
+momentum: 0.9
+momentum2: 0.999
+delta: 0.00000001
+weight_decay: 0.0005
+gamma: 0.5
+stepsize: 500
+display: 50
+max_iter: 10000
+snapshot: 10000
+type: "Adam"
+snapshot_prefix: "alex_multi"
+solver_mode: CPU

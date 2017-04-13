@@ -15,7 +15,7 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_7emo_trainSession.txt"
+    source: "../../Source/AlexPretrain/all_info_large_5emo_trainSession.txt"
     batch_size: 64
     shuffle : true
   }
@@ -37,7 +37,7 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_7emo_testSession.txt"
+    source: "../../Source/AlexPretrain/all_info_large_5emo_testSession.txt"
     batch_size: 32
   }
 }
@@ -356,7 +356,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 70
+    num_output: 65
     weight_filler {
       type: "xavier"
       std: 0.01
@@ -463,7 +463,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 7
+    num_output: 5
     weight_filler {
       type: "xavier"
       std: 0.01
