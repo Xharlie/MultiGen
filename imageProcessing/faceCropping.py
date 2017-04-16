@@ -6,7 +6,7 @@ http://www.lucaamore.com/?p=638
 #Python 2.7.2
 #Opencv 2.4.2
 #PIL 1.1.7
-EMODICT = {"AF":"3", "AN":"4","DI":"0", "HA":"1", "NE":"5", "SA":"6", "SU":"2"}
+EMODICT = {"AF":"4", "AN":"5","DI":"1", "HA":"2", "NE":"0", "SA":"6", "SU":"3"}
 TARGET_SIZE = 158
 
 

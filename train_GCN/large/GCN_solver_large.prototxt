@@ -1,6 +1,6 @@
 # The train/test net protocol buffer definition
-#net: "multiGen_train_net.prototxt"
-net: "GCN_train_large_fixDeterm.prototxt"
+net: "GCN_train_large_genOnly.prototxt"
+#net: "GCN_train_large_fixDeterm.prototxt"
 test_initialization: false
 # test_iter specifies how many forward passes the test should carry out.
 # test_iter: 100

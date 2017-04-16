@@ -1,13 +1,14 @@
 import numpy
 import gzip
-import h5py
+import lmdb
 import os
+import caffe
+from caffe.proto import caffe_pb2
 import cv2
 import re
 from PIL import Image
 import glob
 from shutil import copyfile
-import math
 
 
 IMAGE_SIZE = 158
@@ -16,7 +17,7 @@ WORK_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED_4emo/'
 ORIGIN_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
-SESSION = 'ALL'
+SESSION = 'test'
 EXCLUSION = [
   # exclude test set
   [4, 0, -1, -1],
@@ -56,10 +57,9 @@ INCLUSION = [
 SESSION_SIZE = 2
 PERSON_SIZE = 65
 EMO_SIZE = 4
-TRAN_SIZE = 8
+TRAN_SIZE = 6
 # SAMPLE_SIZE = SESSION_SIZE * (PERSON_SIZE * EMO_SIZE - 15) * TRAN_SIZE
-# SAMPLE_SIZE = SESSION_SIZE * 15 * TRAN_SIZE
-SAMPLE_SIZE = SESSION_SIZE * (PERSON_SIZE * EMO_SIZE) * TRAN_SIZE
+SAMPLE_SIZE = SESSION_SIZE * 15 * TRAN_SIZE
 SOURCE_FOLDER_PREFIX = '../../Source/AlexPretrain/'
 
 def matchExclusion(testee):
@@ -113,26 +113,47 @@ def load():
     data, labels)
   print train_data.shape
 
-  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_'+str(EMO_SIZE)+'emo_'+SESSION+'Session.h5', 'w') as f:
-    f['data'] = train_data / PIXEL_DEPTH
-    f['person'] = toOneHot(train_labels[:,0], PERSON_SIZE)
-    f['personclass'] = train_labels[:,0]
-    f['emotion'] = toOneHot(train_labels[:,1], EMO_SIZE)
-    f['emotionclass'] = train_labels[:,1]
-    f['session'] = toOneHot(train_labels[:,2], SESSION_SIZE)
-    f['sessionclass'] = train_labels[:,2]
-    f['transform'] = toOneHot(train_labels[:,3], TRAN_SIZE)
-    f['transformclass'] = train_labels[:,3]
+  # with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_'+str(EMO_SIZE)+'emo_'+SESSION+'Session.h5', 'w') as f:
+  #   f['data'] = train_data / PIXEL_DEPTH
+  #   f['person'] = toOneHot(train_labels[:,0], PERSON_SIZE)
+  #   f['personclass'] = train_labels[:,0]
+  #   f['emotion'] = toOneHot(train_labels[:,1], EMO_SIZE)
+  #   f['emotionclass'] = train_labels[:,1]
+  #   f['session'] = toOneHot(train_labels[:,2], SESSION_SIZE)
+  #   f['sessionclass'] = train_labels[:,2]
+  #   f['transform'] = toOneHot(train_labels[:,3], TRAN_SIZE)
+  #   f['transformclass'] = train_labels[:,3]
 
-  with open(SOURCE_FOLDER_PREFIX + 'all_info_large_'
+  env = lmdb.open(SOURCE_FOLDER_PREFIX + 'lmdb_all_info_large_'
+            +str(EMO_SIZE)+'emo_'+SESSION+'Session.h5', map_size=int(1e12))
+
+  with env.begin(write=True) as txn:
+    # txn is a Transaction object
+    for i in range(train_data.shape[0]):
+      datum = caffe.proto.caffe_pb2.Datum()
+      datum.channels = train_data.shape[1]
+      datum.height = train_data.shape[2]
+      datum.width = train_data.shape[3]
+      datum.data = train_data[i].tobytes()  # or .tostring() if numpy < 1.9
+      datum.person = toOneHot[train_labels[i,0], PERSON_SIZE]
+      datum.personclass = train_labels[i,0]
+      datum.emotion = toOneHot[train_labels[i,1], PERSON_SIZE]
+      datum.emotionclass = train_labels[i,1], PERSON_SIZE
+      datum.session = toOneHot[train_labels[i,2], PERSON_SIZE]
+      datum.sessionclass = train_labels[i,2], PERSON_SIZE
+      datum.transform = toOneHot[train_labels[i,3], PERSON_SIZE]
+      datum.transformclass = train_labels[i,3], PERSON_SIZE
+      str_id = '{:08}'.format(i)
+      txn.put(str_id.encode('ascii'), datum.SerializeToString())
+
+  with open(SOURCE_FOLDER_PREFIX + 'lmdb_all_info_large_'
                 +str(EMO_SIZE)+'emo_'+SESSION+'Session.txt', 'w') as f:
-    f.write("../../Source/AlexPretrain/" + 'all_info_large_'
+    f.write("../../Source/AlexPretrain/" + 'lmdb_all_info_large_'
             +str(EMO_SIZE)+'emo_'+SESSION+'Session.h5' + "\n")
 
 def toOneHot(labels, choices):
-  one_hot = numpy.zeros((labels.shape[0], choices), dtype=numpy.int8)
-  for i in range(0, labels.shape[0]):
-    one_hot[i][labels[i]] = 1
+  one_hot = numpy.zeros((choices), dtype=numpy.int8)
+  one_hot[labels] = 1
   return one_hot
 
 def augmentImage(images, labels):
@@ -140,10 +161,10 @@ def augmentImage(images, labels):
   augmented_labels = numpy.zeros((SAMPLE_SIZE, 4), dtype=numpy.int8)
   amount = 0
   for i in range(0, images.shape[0]):
-    for transformIndex in range(0, TRAN_SIZE):
+    for transformIndex in range(0, 6):
       if matchExclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]) == (SESSION == 'train') :
         print [labels[i][0], labels[i][1], transformIndex]
-        if (SESSION != 'ALL'): continue
+        continue
       augmented_images[amount] = augment(images[i], transformIndex)
       augmented_labels[amount] = [labels[i][0], labels[i][1], labels[i][2], transformIndex]
       amount = amount + 1
@@ -151,9 +172,12 @@ def augmentImage(images, labels):
   return numpy.transpose(augmented_images, (0, 3, 1, 2)), augmented_labels
 
 def augment(image, transformIndex):
-  image = numpy.rot90(image, transformIndex % 4)
-  if math.floor(transformIndex / 4) == 1:
+  if transformIndex < 4:
+    image = numpy.rot90(image, transformIndex)
+  elif transformIndex == 5:
     image = numpy.fliplr(image)
+  else:
+    image = numpy.flipud(image)
   return image
 
 def modified():
@@ -164,7 +188,7 @@ def modified():
   counter = 0
   for i in range(0, 70):
     if (i not in person_exclusion_list):
-      person_index.append(i)
+      person_index.append(i);
   print person_index
   for img in imgList:
     comp = img.split('/')

@@ -16,51 +16,31 @@ WORK_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED_4emo/'
 ORIGIN_DIRECTORY = '../../KDEF_dataset/KDEF_CROPPED/'
 NUM_CHANNELS = 3
 PIXEL_DEPTH = 255.0
-SESSION = 'ALL'
+# SESSION = 'ALL'
 EXCLUSION = [
   # exclude test set
-  [4, 0, -1, -1],
-  [8, 1, -1, -1],
-  [12, 2, -1, -1],
-  [16, 3, -1, -1],
-  [20, 0, -1, -1],
-  [24, 1, -1, -1],
-  [28, 2, -1, -1],
-  [32, 3, -1, -1],
-  [36, 0, -1, -1],
-  [40, 1, -1, -1],
-  [44, 2, -1, -1],
-  [48, 3, -1, -1],
-  [56, 0, -1, -1],
-  [60, 1, -1, -1],
-  [64, 2, -1, -1]
+  [4, 0, -1,1],
+  [36, 1, -1,2],
+
+  [41, 0, -1, -1],
+  [46, 0, -1,-1],
+
+  [56, 1, -1,-1],
+  [63, 1, -1,-1],
+
+  [34, 2, -1,-1],
+  [48, 2, -1,-1],
+
+  [9, 3, -1,-1],
+  [28, 3, -1,-1],
 ]
 
-INCLUSION = [
-  [4, 0, -1, -1],
-  [8, 1, -1, -1],
-  [12, 2, -1, -1],
-  [16, 3, -1, -1],
-  [20, 0, -1, -1],
-  [24, 1, -1, -1],
-  [28, 2, -1, -1],
-  [32, 3, -1, -1],
-  [36, 0, -1, -1],
-  [40, 1, -1, -1],
-  [44, 2, -1, -1],
-  [48, 3, -1, -1],
-  [56, 0, -1, -1],
-  [60, 1, -1, -1],
-  [64, 2, -1, -1]
-]
 SESSION_SIZE = 2
 PERSON_SIZE = 65
 EMO_SIZE = 4
-TRAN_SIZE = 8
-# SAMPLE_SIZE = SESSION_SIZE * (PERSON_SIZE * EMO_SIZE - 15) * TRAN_SIZE
-# SAMPLE_SIZE = SESSION_SIZE * 15 * TRAN_SIZE
-SAMPLE_SIZE = SESSION_SIZE * (PERSON_SIZE * EMO_SIZE) * TRAN_SIZE
-SOURCE_FOLDER_PREFIX = '../../Source/AlexPretrain/'
+TRAN_SIZE = 4
+SAMPLE_SIZE = SESSION_SIZE * ((PERSON_SIZE * EMO_SIZE - 8) * TRAN_SIZE - 2)
+SOURCE_FOLDER_PREFIX = '../../Source/GCN/'
 
 def matchExclusion(testee):
   for tester in EXCLUSION:
@@ -113,7 +93,7 @@ def load():
     data, labels)
   print train_data.shape
 
-  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_'+str(EMO_SIZE)+'emo_'+SESSION+'Session.h5', 'w') as f:
+  with h5py.File(SOURCE_FOLDER_PREFIX + 'all_info_large_'+str(EMO_SIZE)+'emo.h5', 'w') as f:
     f['data'] = train_data / PIXEL_DEPTH
     f['person'] = toOneHot(train_labels[:,0], PERSON_SIZE)
     f['personclass'] = train_labels[:,0]
@@ -125,9 +105,9 @@ def load():
     f['transformclass'] = train_labels[:,3]
 
   with open(SOURCE_FOLDER_PREFIX + 'all_info_large_'
-                +str(EMO_SIZE)+'emo_'+SESSION+'Session.txt', 'w') as f:
-    f.write("../../Source/AlexPretrain/" + 'all_info_large_'
-            +str(EMO_SIZE)+'emo_'+SESSION+'Session.h5' + "\n")
+                +str(EMO_SIZE)+'emo.txt', 'w') as f:
+    f.write(SOURCE_FOLDER_PREFIX + 'all_info_large_'
+            +str(EMO_SIZE)+'emo.h5' + "\n")
 
 def toOneHot(labels, choices):
   one_hot = numpy.zeros((labels.shape[0], choices), dtype=numpy.int8)
@@ -141,9 +121,9 @@ def augmentImage(images, labels):
   amount = 0
   for i in range(0, images.shape[0]):
     for transformIndex in range(0, TRAN_SIZE):
-      if matchExclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]) == (SESSION == 'train') :
+      if matchExclusion([labels[i][0], labels[i][1], labels[i][2], transformIndex]):
         print [labels[i][0], labels[i][1], transformIndex]
-        if (SESSION != 'ALL'): continue
+        continue
       augmented_images[amount] = augment(images[i], transformIndex)
       augmented_labels[amount] = [labels[i][0], labels[i][1], labels[i][2], transformIndex]
       amount = amount + 1
@@ -152,8 +132,8 @@ def augmentImage(images, labels):
 
 def augment(image, transformIndex):
   image = numpy.rot90(image, transformIndex % 4)
-  if math.floor(transformIndex / 4) == 1:
-    image = numpy.fliplr(image)
+  # if math.floor(transformIndex / 4) == 1:
+  #   image = numpy.fliplr(image)
   return image
 
 def modified():

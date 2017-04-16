@@ -5,7 +5,6 @@ layer {
   top: "data"
   top: "personclass"
   top: "emotionclass"
-  top: "transformclass"
   include {
     phase: TRAIN
   }
@@ -15,8 +14,8 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_4emo_trainSession.txt"
-    batch_size: 64
+    source: "../../Source/AlexPretrain/all_info_large_4emo_ALLSession.txt"
+    batch_size: 48
     shuffle : true
   }
 }
@@ -27,7 +26,6 @@ layer {
   top: "data"
   top: "personclass"
   top: "emotionclass"
-  top: "transformclass"
   include {
     phase: TEST
   }
@@ -37,8 +35,8 @@ layer {
 #    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
 #  }
   hdf5_data_param {
-    source: "../../Source/AlexPretrain/all_info_large_4emo_testSession.txt"
-    batch_size: 32
+    source: "../../Source/AlexPretrain/all_info_large_4emo_ALLSession.txt"
+    batch_size: 16
   }
 }
 layer {
@@ -73,6 +71,9 @@ layer {
   type: "ReLU"
   bottom: "conv1"
   top: "conv1"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "norm1"
@@ -128,6 +129,9 @@ layer {
   type: "ReLU"
   bottom: "conv2"
   top: "conv2"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "norm2"
@@ -183,6 +187,9 @@ layer {
   type: "ReLU"
   bottom: "conv3"
   top: "conv3"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "conv4"
@@ -216,6 +223,9 @@ layer {
   type: "ReLU"
   bottom: "conv4"
   top: "conv4"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "conv5"
@@ -249,6 +259,9 @@ layer {
   type: "ReLU"
   bottom: "conv5"
   top: "conv5"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "pool5"
@@ -291,6 +304,9 @@ layer {
   type: "ReLU"
   bottom: "fc6_person"
   top: "fc6_person"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "drop6_person"
@@ -331,6 +347,9 @@ layer {
   type: "ReLU"
   bottom: "fc7_person"
   top: "fc7_person"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "drop7_person"
@@ -382,7 +401,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 4096
+    num_output: 1024
     weight_filler {
       type: "xavier"
       std: 0.005
@@ -398,6 +417,9 @@ layer {
   type: "ReLU"
   bottom: "fc6_emotion"
   top: "fc6_emotion"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "drop6_emotion"
@@ -438,6 +460,9 @@ layer {
   type: "ReLU"
   bottom: "fc7_emotion"
   top: "fc7_emotion"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "drop7_emotion"

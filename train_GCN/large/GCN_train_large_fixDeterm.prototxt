@@ -5,12 +5,13 @@ layer {
   type: "HDF5Data"
   top: "data"
   top: "person"
+  top: "personclass"
   top: "emotion"
   top: "emotionclass"
   top: "session"
   top: "transform"
   hdf5_data_param {
-    source: "../../Source/GCN/all_info_large_3emo.txt"
+    source: "../../Source/GCN/all_info_large_4emo.txt"
     batch_size: 32
     shuffle : true
   }
@@ -702,6 +703,9 @@ layer {
   type: "ReLU"
   bottom: "conv1"
   top: "conv1"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "norm1"
@@ -757,6 +761,9 @@ layer {
   type: "ReLU"
   bottom: "conv2"
   top: "conv2"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "norm2"
@@ -812,6 +819,9 @@ layer {
   type: "ReLU"
   bottom: "conv3"
   top: "conv3"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "conv4"
@@ -845,6 +855,9 @@ layer {
   type: "ReLU"
   bottom: "conv4"
   top: "conv4"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "conv5"
@@ -878,6 +891,9 @@ layer {
   type: "ReLU"
   bottom: "conv5"
   top: "conv5"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
   name: "pool5"
@@ -891,10 +907,10 @@ layer {
   }
 }
 layer {
-  name: "fc6"
+  name: "fc6_person"
   type: "InnerProduct"
   bottom: "pool5"
-  top: "fc6"
+  top: "fc6_person"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -916,25 +932,28 @@ layer {
   }
 }
 layer {
-  name: "relu6"
+  name: "relu6_person"
   type: "ReLU"
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6_person"
+  top: "fc6_person"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
-  name: "drop6"
+  name: "drop6_person"
   type: "Dropout"
-  bottom: "fc6"
-  top: "fc6"
+  bottom: "fc6_person"
+  top: "fc6_person"
   dropout_param {
     dropout_ratio: 0.5
   }
 }
 layer {
-  name: "fc7"
+  name: "fc7_person"
   type: "InnerProduct"
-  bottom: "fc6"
-  top: "fc7"
+  bottom: "fc6_person"
+  top: "fc7_person"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -956,25 +975,29 @@ layer {
   }
 }
 layer {
-  name: "relu7"
+  name: "relu7_person"
   type: "ReLU"
-  bottom: "fc7"
-  top: "fc7"
+  bottom: "fc7_person"
+  top: "fc7_person"
+  relu_param {
+     negative_slope: 0.2
+  }
 }
 layer {
-  name: "drop7"
+  name: "drop7_person"
   type: "Dropout"
-  bottom: "fc7"
-  top: "fc7"
+  bottom: "fc7_person"
+  top: "fc7_person"
   dropout_param {
     dropout_ratio: 0.5
   }
 }
+
 layer {
-  name: "fc8"
+  name: "fc8_person"
   type: "InnerProduct"
-  bottom: "fc7"
-  top: "fc8"
+  bottom: "fc7_person"
+  top: "fc8_person"
   param {
     lr_mult: 1
     decay_mult: 1
@@ -984,7 +1007,7 @@ layer {
     decay_mult: 0
   }
   inner_product_param {
-    num_output: 3
+    num_output: 65
     weight_filler {
       type: "xavier"
       std: 0.01
@@ -997,11 +1020,151 @@ layer {
 }
 
 layer {
-  name: "loss"
-  type: "SoftmaxWithLoss"
-  bottom: "fc8"
-  bottom: "emotionclass"
-  top: "classification_loss"
-  loss_weight: 10000
+  name: "fc6_emotion"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1024
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6_emotion"
+  type: "ReLU"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+  relu_param {
+     negative_slope: 0.2
+  }
+}
+layer {
+  name: "drop6_emotion"
+  type: "Dropout"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_emotion"
+  type: "InnerProduct"
+  bottom: "fc6_emotion"
+  top: "fc7_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7_emotion"
+  type: "ReLU"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+  relu_param {
+     negative_slope: 0.2
+  }
+}
+layer {
+  name: "drop7_emotion"
+  type: "Dropout"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
 }
 
+layer {
+  name: "fc8_emotion"
+  type: "InnerProduct"
+  bottom: "fc7_emotion"
+  top: "fc8_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+layer {
+  name: "person_accuracy"
+  type: "Accuracy"
+  bottom: "fc8_person"
+  bottom: "personclass"
+  top: "person_accuracy"
+  include {
+    phase: TEST
+  }
+}
+
+layer {
+  name: "personClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_person"
+  bottom: "personclass"
+  top: "personClassloss"
+}
+
+layer {
+  name: "emotion_accuracy"
+  type: "Accuracy"
+  bottom: "fc8_emotion"
+  bottom: "emotionclass"
+  top: "emotion_accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "emotionClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_emotion"
+  bottom: "emotionclass"
+  top: "emotionClassloss"
+}
