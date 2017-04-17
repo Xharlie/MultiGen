@@ -1,0 +1,2458 @@
+I0414 02:37:03.781363 12560 caffe.cpp:218] Using GPUs 0
+I0414 02:37:04.653630 12560 caffe.cpp:223] GPU 0: GeForce GTX 1070
+I0414 02:37:15.882714 12560 solver.cpp:44] Initializing solver from parameters: 
+test_iter: 100
+test_interval: 1000
+base_lr: 0.001
+display: 50
+max_iter: 10000
+lr_policy: "step"
+gamma: 0.5
+momentum: 0.9
+weight_decay: 0.0005
+stepsize: 500
+snapshot: 10000
+snapshot_prefix: "alex_multi"
+solver_mode: GPU
+device_id: 0
+net: "train_val.prototxt"
+train_state {
+  level: 0
+  stage: ""
+}
+delta: 1e-08
+momentum2: 0.995
+type: "Adam"
+I0414 02:37:15.882989 12560 solver.cpp:87] Creating training net from net file: train_val.prototxt
+I0414 02:37:15.883486 12560 net.cpp:294] The NetState phase (0) differed from the phase (1) specified by a rule in layer data
+I0414 02:37:15.883520 12560 net.cpp:294] The NetState phase (0) differed from the phase (1) specified by a rule in layer person_accuracy
+I0414 02:37:15.883534 12560 net.cpp:294] The NetState phase (0) differed from the phase (1) specified by a rule in layer emotion_accuracy
+I0414 02:37:15.883896 12560 net.cpp:51] Initializing net from parameters: 
+name: "AlexNet"
+state {
+  phase: TRAIN
+  level: 0
+  stage: ""
+}
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "personclass"
+  top: "emotionclass"
+  include {
+    phase: TRAIN
+  }
+  hdf5_data_param {
+    source: "../../Source/AlexPretrain/all_info_large_5emo_trainSession.txt"
+    batch_size: 64
+    shuffle: true
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 2
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "conv1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "norm1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "conv2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "norm2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6_person"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6_person"
+  type: "ReLU"
+  bottom: "fc6_person"
+  top: "fc6_person"
+}
+layer {
+  name: "drop6_person"
+  type: "Dropout"
+  bottom: "fc6_person"
+  top: "fc6_person"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_person"
+  type: "InnerProduct"
+  bottom: "fc6_person"
+  top: "fc7_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7_person"
+  type: "ReLU"
+  bottom: "fc7_person"
+  top: "fc7_person"
+}
+layer {
+  name: "drop7_person"
+  type: "Dropout"
+  bottom: "fc7_person"
+  top: "fc7_person"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc8_person"
+  type: "InnerProduct"
+  bottom: "fc7_person"
+  top: "fc8_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 65
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "fc6_emotion"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6_emotion"
+  type: "ReLU"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+}
+layer {
+  name: "drop6_emotion"
+  type: "Dropout"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_emotion"
+  type: "InnerProduct"
+  bottom: "fc6_emotion"
+  top: "fc7_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7_emotion"
+  type: "ReLU"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+}
+layer {
+  name: "drop7_emotion"
+  type: "Dropout"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc8_emotion"
+  type: "InnerProduct"
+  bottom: "fc7_emotion"
+  top: "fc8_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "personClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_person"
+  bottom: "personclass"
+  top: "personClassloss"
+}
+layer {
+  name: "emotionClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_emotion"
+  bottom: "emotionclass"
+  top: "emotionClassloss"
+}
+I0414 02:37:15.884078 12560 layer_factory.hpp:77] Creating layer data
+I0414 02:37:15.884099 12560 net.cpp:84] Creating Layer data
+I0414 02:37:15.884116 12560 net.cpp:380] data -> data
+I0414 02:37:15.884145 12560 net.cpp:380] data -> personclass
+I0414 02:37:15.884166 12560 net.cpp:380] data -> emotionclass
+I0414 02:37:15.884187 12560 hdf5_data_layer.cpp:80] Loading list of HDF5 filenames from: ../../Source/AlexPretrain/all_info_large_5emo_trainSession.txt
+I0414 02:37:15.946792 12560 hdf5_data_layer.cpp:94] Number of HDF5 files: 1
+I0414 02:37:16.464262 12560 hdf5.cpp:32] Datatype class: H5T_FLOAT
+I0414 02:38:02.627892 12560 hdf5.cpp:35] Datatype class: H5T_INTEGER
+I0414 02:38:02.630699 12560 net.cpp:122] Setting up data
+I0414 02:38:02.630755 12560 net.cpp:129] Top shape: 64 3 158 158 (4793088)
+I0414 02:38:02.630771 12560 net.cpp:129] Top shape: 64 (64)
+I0414 02:38:02.630785 12560 net.cpp:129] Top shape: 64 (64)
+I0414 02:38:02.630796 12560 net.cpp:137] Memory required for data: 19172864
+I0414 02:38:02.630815 12560 layer_factory.hpp:77] Creating layer conv1
+I0414 02:38:02.630848 12560 net.cpp:84] Creating Layer conv1
+I0414 02:38:02.630863 12560 net.cpp:406] conv1 <- data
+I0414 02:38:02.630887 12560 net.cpp:380] conv1 -> conv1
+I0414 02:38:02.634464 12560 net.cpp:122] Setting up conv1
+I0414 02:38:02.634527 12560 net.cpp:129] Top shape: 64 96 74 74 (33644544)
+I0414 02:38:02.634541 12560 net.cpp:137] Memory required for data: 153751040
+I0414 02:38:02.634582 12560 layer_factory.hpp:77] Creating layer relu1
+I0414 02:38:02.634604 12560 net.cpp:84] Creating Layer relu1
+I0414 02:38:02.634618 12560 net.cpp:406] relu1 <- conv1
+I0414 02:38:02.634634 12560 net.cpp:367] relu1 -> conv1 (in-place)
+I0414 02:38:02.634655 12560 net.cpp:122] Setting up relu1
+I0414 02:38:02.634670 12560 net.cpp:129] Top shape: 64 96 74 74 (33644544)
+I0414 02:38:02.634681 12560 net.cpp:137] Memory required for data: 288329216
+I0414 02:38:02.634693 12560 layer_factory.hpp:77] Creating layer norm1
+I0414 02:38:02.634711 12560 net.cpp:84] Creating Layer norm1
+I0414 02:38:02.634722 12560 net.cpp:406] norm1 <- conv1
+I0414 02:38:02.634737 12560 net.cpp:380] norm1 -> norm1
+I0414 02:38:02.634805 12560 net.cpp:122] Setting up norm1
+I0414 02:38:02.634821 12560 net.cpp:129] Top shape: 64 96 74 74 (33644544)
+I0414 02:38:02.634834 12560 net.cpp:137] Memory required for data: 422907392
+I0414 02:38:02.634845 12560 layer_factory.hpp:77] Creating layer pool1
+I0414 02:38:02.634861 12560 net.cpp:84] Creating Layer pool1
+I0414 02:38:02.634874 12560 net.cpp:406] pool1 <- norm1
+I0414 02:38:02.634888 12560 net.cpp:380] pool1 -> pool1
+I0414 02:38:02.634950 12560 net.cpp:122] Setting up pool1
+I0414 02:38:02.634966 12560 net.cpp:129] Top shape: 64 96 37 37 (8411136)
+I0414 02:38:02.634977 12560 net.cpp:137] Memory required for data: 456551936
+I0414 02:38:02.634989 12560 layer_factory.hpp:77] Creating layer conv2
+I0414 02:38:02.635011 12560 net.cpp:84] Creating Layer conv2
+I0414 02:38:02.635023 12560 net.cpp:406] conv2 <- pool1
+I0414 02:38:02.635040 12560 net.cpp:380] conv2 -> conv2
+I0414 02:38:02.642887 12560 net.cpp:122] Setting up conv2
+I0414 02:38:02.642948 12560 net.cpp:129] Top shape: 64 256 37 37 (22429696)
+I0414 02:38:02.642961 12560 net.cpp:137] Memory required for data: 546270720
+I0414 02:38:02.642984 12560 layer_factory.hpp:77] Creating layer relu2
+I0414 02:38:02.643004 12560 net.cpp:84] Creating Layer relu2
+I0414 02:38:02.643018 12560 net.cpp:406] relu2 <- conv2
+I0414 02:38:02.643033 12560 net.cpp:367] relu2 -> conv2 (in-place)
+I0414 02:38:02.643051 12560 net.cpp:122] Setting up relu2
+I0414 02:38:02.643066 12560 net.cpp:129] Top shape: 64 256 37 37 (22429696)
+I0414 02:38:02.643077 12560 net.cpp:137] Memory required for data: 635989504
+I0414 02:38:02.643090 12560 layer_factory.hpp:77] Creating layer norm2
+I0414 02:38:02.643105 12560 net.cpp:84] Creating Layer norm2
+I0414 02:38:02.643117 12560 net.cpp:406] norm2 <- conv2
+I0414 02:38:02.643132 12560 net.cpp:380] norm2 -> norm2
+I0414 02:38:02.643183 12560 net.cpp:122] Setting up norm2
+I0414 02:38:02.643198 12560 net.cpp:129] Top shape: 64 256 37 37 (22429696)
+I0414 02:38:02.643210 12560 net.cpp:137] Memory required for data: 725708288
+I0414 02:38:02.643221 12560 layer_factory.hpp:77] Creating layer pool2
+I0414 02:38:02.643239 12560 net.cpp:84] Creating Layer pool2
+I0414 02:38:02.643251 12560 net.cpp:406] pool2 <- norm2
+I0414 02:38:02.643266 12560 net.cpp:380] pool2 -> pool2
+I0414 02:38:02.643316 12560 net.cpp:122] Setting up pool2
+I0414 02:38:02.643348 12560 net.cpp:129] Top shape: 64 256 18 18 (5308416)
+I0414 02:38:02.643359 12560 net.cpp:137] Memory required for data: 746941952
+I0414 02:38:02.643371 12560 layer_factory.hpp:77] Creating layer conv3
+I0414 02:38:02.643390 12560 net.cpp:84] Creating Layer conv3
+I0414 02:38:02.643417 12560 net.cpp:406] conv3 <- pool2
+I0414 02:38:02.643434 12560 net.cpp:380] conv3 -> conv3
+I0414 02:38:02.656517 12560 net.cpp:122] Setting up conv3
+I0414 02:38:02.656581 12560 net.cpp:129] Top shape: 64 384 18 18 (7962624)
+I0414 02:38:02.656594 12560 net.cpp:137] Memory required for data: 778792448
+I0414 02:38:02.656620 12560 layer_factory.hpp:77] Creating layer relu3
+I0414 02:38:02.656641 12560 net.cpp:84] Creating Layer relu3
+I0414 02:38:02.656654 12560 net.cpp:406] relu3 <- conv3
+I0414 02:38:02.656671 12560 net.cpp:367] relu3 -> conv3 (in-place)
+I0414 02:38:02.656688 12560 net.cpp:122] Setting up relu3
+I0414 02:38:02.656702 12560 net.cpp:129] Top shape: 64 384 18 18 (7962624)
+I0414 02:38:02.656714 12560 net.cpp:137] Memory required for data: 810642944
+I0414 02:38:02.656725 12560 layer_factory.hpp:77] Creating layer conv4
+I0414 02:38:02.656746 12560 net.cpp:84] Creating Layer conv4
+I0414 02:38:02.656757 12560 net.cpp:406] conv4 <- conv3
+I0414 02:38:02.656772 12560 net.cpp:380] conv4 -> conv4
+I0414 02:38:02.673728 12560 net.cpp:122] Setting up conv4
+I0414 02:38:02.673795 12560 net.cpp:129] Top shape: 64 384 18 18 (7962624)
+I0414 02:38:02.673807 12560 net.cpp:137] Memory required for data: 842493440
+I0414 02:38:02.673828 12560 layer_factory.hpp:77] Creating layer relu4
+I0414 02:38:02.673848 12560 net.cpp:84] Creating Layer relu4
+I0414 02:38:02.673861 12560 net.cpp:406] relu4 <- conv4
+I0414 02:38:02.673877 12560 net.cpp:367] relu4 -> conv4 (in-place)
+I0414 02:38:02.673895 12560 net.cpp:122] Setting up relu4
+I0414 02:38:02.673910 12560 net.cpp:129] Top shape: 64 384 18 18 (7962624)
+I0414 02:38:02.673921 12560 net.cpp:137] Memory required for data: 874343936
+I0414 02:38:02.673933 12560 layer_factory.hpp:77] Creating layer conv5
+I0414 02:38:02.673952 12560 net.cpp:84] Creating Layer conv5
+I0414 02:38:02.673964 12560 net.cpp:406] conv5 <- conv4
+I0414 02:38:02.673980 12560 net.cpp:380] conv5 -> conv5
+I0414 02:38:02.685365 12560 net.cpp:122] Setting up conv5
+I0414 02:38:02.685439 12560 net.cpp:129] Top shape: 64 256 18 18 (5308416)
+I0414 02:38:02.685452 12560 net.cpp:137] Memory required for data: 895577600
+I0414 02:38:02.685479 12560 layer_factory.hpp:77] Creating layer relu5
+I0414 02:38:02.685500 12560 net.cpp:84] Creating Layer relu5
+I0414 02:38:02.685513 12560 net.cpp:406] relu5 <- conv5
+I0414 02:38:02.685529 12560 net.cpp:367] relu5 -> conv5 (in-place)
+I0414 02:38:02.685547 12560 net.cpp:122] Setting up relu5
+I0414 02:38:02.685562 12560 net.cpp:129] Top shape: 64 256 18 18 (5308416)
+I0414 02:38:02.685573 12560 net.cpp:137] Memory required for data: 916811264
+I0414 02:38:02.685585 12560 layer_factory.hpp:77] Creating layer pool5
+I0414 02:38:02.685600 12560 net.cpp:84] Creating Layer pool5
+I0414 02:38:02.685611 12560 net.cpp:406] pool5 <- conv5
+I0414 02:38:02.685626 12560 net.cpp:380] pool5 -> pool5
+I0414 02:38:02.685679 12560 net.cpp:122] Setting up pool5
+I0414 02:38:02.685694 12560 net.cpp:129] Top shape: 64 256 9 9 (1327104)
+I0414 02:38:02.685706 12560 net.cpp:137] Memory required for data: 922119680
+I0414 02:38:02.685717 12560 layer_factory.hpp:77] Creating layer pool5_pool5_0_split
+I0414 02:38:02.685735 12560 net.cpp:84] Creating Layer pool5_pool5_0_split
+I0414 02:38:02.685747 12560 net.cpp:406] pool5_pool5_0_split <- pool5
+I0414 02:38:02.685762 12560 net.cpp:380] pool5_pool5_0_split -> pool5_pool5_0_split_0
+I0414 02:38:02.685780 12560 net.cpp:380] pool5_pool5_0_split -> pool5_pool5_0_split_1
+I0414 02:38:02.685828 12560 net.cpp:122] Setting up pool5_pool5_0_split
+I0414 02:38:02.685843 12560 net.cpp:129] Top shape: 64 256 9 9 (1327104)
+I0414 02:38:02.685858 12560 net.cpp:129] Top shape: 64 256 9 9 (1327104)
+I0414 02:38:02.685868 12560 net.cpp:137] Memory required for data: 932736512
+I0414 02:38:02.685899 12560 layer_factory.hpp:77] Creating layer fc6_person
+I0414 02:38:02.685915 12560 net.cpp:84] Creating Layer fc6_person
+I0414 02:38:02.685927 12560 net.cpp:406] fc6_person <- pool5_pool5_0_split_0
+I0414 02:38:02.685942 12560 net.cpp:380] fc6_person -> fc6_person
+I0414 02:38:03.734666 12560 net.cpp:122] Setting up fc6_person
+I0414 02:38:03.734788 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.734803 12560 net.cpp:137] Memory required for data: 933785088
+I0414 02:38:03.734833 12560 layer_factory.hpp:77] Creating layer relu6_person
+I0414 02:38:03.734860 12560 net.cpp:84] Creating Layer relu6_person
+I0414 02:38:03.734876 12560 net.cpp:406] relu6_person <- fc6_person
+I0414 02:38:03.734897 12560 net.cpp:367] relu6_person -> fc6_person (in-place)
+I0414 02:38:03.734920 12560 net.cpp:122] Setting up relu6_person
+I0414 02:38:03.734936 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.734947 12560 net.cpp:137] Memory required for data: 934833664
+I0414 02:38:03.734961 12560 layer_factory.hpp:77] Creating layer drop6_person
+I0414 02:38:03.734977 12560 net.cpp:84] Creating Layer drop6_person
+I0414 02:38:03.734989 12560 net.cpp:406] drop6_person <- fc6_person
+I0414 02:38:03.735004 12560 net.cpp:367] drop6_person -> fc6_person (in-place)
+I0414 02:38:03.735049 12560 net.cpp:122] Setting up drop6_person
+I0414 02:38:03.735064 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.735075 12560 net.cpp:137] Memory required for data: 935882240
+I0414 02:38:03.735086 12560 layer_factory.hpp:77] Creating layer fc7_person
+I0414 02:38:03.735103 12560 net.cpp:84] Creating Layer fc7_person
+I0414 02:38:03.735116 12560 net.cpp:406] fc7_person <- fc6_person
+I0414 02:38:03.735131 12560 net.cpp:380] fc7_person -> fc7_person
+I0414 02:38:03.942345 12560 net.cpp:122] Setting up fc7_person
+I0414 02:38:03.942418 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.942432 12560 net.cpp:137] Memory required for data: 936930816
+I0414 02:38:03.942459 12560 layer_factory.hpp:77] Creating layer relu7_person
+I0414 02:38:03.942486 12560 net.cpp:84] Creating Layer relu7_person
+I0414 02:38:03.942500 12560 net.cpp:406] relu7_person <- fc7_person
+I0414 02:38:03.942519 12560 net.cpp:367] relu7_person -> fc7_person (in-place)
+I0414 02:38:03.942538 12560 net.cpp:122] Setting up relu7_person
+I0414 02:38:03.942551 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.942562 12560 net.cpp:137] Memory required for data: 937979392
+I0414 02:38:03.942574 12560 layer_factory.hpp:77] Creating layer drop7_person
+I0414 02:38:03.942589 12560 net.cpp:84] Creating Layer drop7_person
+I0414 02:38:03.942601 12560 net.cpp:406] drop7_person <- fc7_person
+I0414 02:38:03.942615 12560 net.cpp:367] drop7_person -> fc7_person (in-place)
+I0414 02:38:03.942651 12560 net.cpp:122] Setting up drop7_person
+I0414 02:38:03.942665 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:03.942677 12560 net.cpp:137] Memory required for data: 939027968
+I0414 02:38:03.942687 12560 layer_factory.hpp:77] Creating layer fc8_person
+I0414 02:38:03.942704 12560 net.cpp:84] Creating Layer fc8_person
+I0414 02:38:03.942716 12560 net.cpp:406] fc8_person <- fc7_person
+I0414 02:38:03.942731 12560 net.cpp:380] fc8_person -> fc8_person
+I0414 02:38:03.947057 12560 net.cpp:122] Setting up fc8_person
+I0414 02:38:03.947108 12560 net.cpp:129] Top shape: 64 65 (4160)
+I0414 02:38:03.947120 12560 net.cpp:137] Memory required for data: 939044608
+I0414 02:38:03.947140 12560 layer_factory.hpp:77] Creating layer fc6_emotion
+I0414 02:38:03.947161 12560 net.cpp:84] Creating Layer fc6_emotion
+I0414 02:38:03.947173 12560 net.cpp:406] fc6_emotion <- pool5_pool5_0_split_1
+I0414 02:38:03.947192 12560 net.cpp:380] fc6_emotion -> fc6_emotion
+I0414 02:38:04.997910 12560 net.cpp:122] Setting up fc6_emotion
+I0414 02:38:04.998005 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:04.998020 12560 net.cpp:137] Memory required for data: 940093184
+I0414 02:38:04.998061 12560 layer_factory.hpp:77] Creating layer relu6_emotion
+I0414 02:38:04.998091 12560 net.cpp:84] Creating Layer relu6_emotion
+I0414 02:38:04.998138 12560 net.cpp:406] relu6_emotion <- fc6_emotion
+I0414 02:38:04.998163 12560 net.cpp:367] relu6_emotion -> fc6_emotion (in-place)
+I0414 02:38:04.998186 12560 net.cpp:122] Setting up relu6_emotion
+I0414 02:38:04.998201 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:04.998231 12560 net.cpp:137] Memory required for data: 941141760
+I0414 02:38:04.998244 12560 layer_factory.hpp:77] Creating layer drop6_emotion
+I0414 02:38:04.998260 12560 net.cpp:84] Creating Layer drop6_emotion
+I0414 02:38:04.998271 12560 net.cpp:406] drop6_emotion <- fc6_emotion
+I0414 02:38:04.998286 12560 net.cpp:367] drop6_emotion -> fc6_emotion (in-place)
+I0414 02:38:04.998324 12560 net.cpp:122] Setting up drop6_emotion
+I0414 02:38:04.998339 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:04.998350 12560 net.cpp:137] Memory required for data: 942190336
+I0414 02:38:04.998361 12560 layer_factory.hpp:77] Creating layer fc7_emotion
+I0414 02:38:04.998378 12560 net.cpp:84] Creating Layer fc7_emotion
+I0414 02:38:04.998390 12560 net.cpp:406] fc7_emotion <- fc6_emotion
+I0414 02:38:04.998405 12560 net.cpp:380] fc7_emotion -> fc7_emotion
+I0414 02:38:05.208053 12560 net.cpp:122] Setting up fc7_emotion
+I0414 02:38:05.208147 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:05.208163 12560 net.cpp:137] Memory required for data: 943238912
+I0414 02:38:05.208190 12560 layer_factory.hpp:77] Creating layer relu7_emotion
+I0414 02:38:05.208219 12560 net.cpp:84] Creating Layer relu7_emotion
+I0414 02:38:05.208235 12560 net.cpp:406] relu7_emotion <- fc7_emotion
+I0414 02:38:05.208256 12560 net.cpp:367] relu7_emotion -> fc7_emotion (in-place)
+I0414 02:38:05.208276 12560 net.cpp:122] Setting up relu7_emotion
+I0414 02:38:05.208290 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:05.208302 12560 net.cpp:137] Memory required for data: 944287488
+I0414 02:38:05.208313 12560 layer_factory.hpp:77] Creating layer drop7_emotion
+I0414 02:38:05.208329 12560 net.cpp:84] Creating Layer drop7_emotion
+I0414 02:38:05.208341 12560 net.cpp:406] drop7_emotion <- fc7_emotion
+I0414 02:38:05.208355 12560 net.cpp:367] drop7_emotion -> fc7_emotion (in-place)
+I0414 02:38:05.208389 12560 net.cpp:122] Setting up drop7_emotion
+I0414 02:38:05.208405 12560 net.cpp:129] Top shape: 64 4096 (262144)
+I0414 02:38:05.208416 12560 net.cpp:137] Memory required for data: 945336064
+I0414 02:38:05.208427 12560 layer_factory.hpp:77] Creating layer fc8_emotion
+I0414 02:38:05.208444 12560 net.cpp:84] Creating Layer fc8_emotion
+I0414 02:38:05.208456 12560 net.cpp:406] fc8_emotion <- fc7_emotion
+I0414 02:38:05.208472 12560 net.cpp:380] fc8_emotion -> fc8_emotion
+I0414 02:38:05.208817 12560 net.cpp:122] Setting up fc8_emotion
+I0414 02:38:05.208832 12560 net.cpp:129] Top shape: 64 5 (320)
+I0414 02:38:05.208843 12560 net.cpp:137] Memory required for data: 945337344
+I0414 02:38:05.208858 12560 layer_factory.hpp:77] Creating layer personClassloss
+I0414 02:38:05.208874 12560 net.cpp:84] Creating Layer personClassloss
+I0414 02:38:05.208886 12560 net.cpp:406] personClassloss <- fc8_person
+I0414 02:38:05.208899 12560 net.cpp:406] personClassloss <- personclass
+I0414 02:38:05.208914 12560 net.cpp:380] personClassloss -> personClassloss
+I0414 02:38:05.208961 12560 layer_factory.hpp:77] Creating layer personClassloss
+I0414 02:38:05.209095 12560 net.cpp:122] Setting up personClassloss
+I0414 02:38:05.209110 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:05.209120 12560 net.cpp:132]     with loss weight 1
+I0414 02:38:05.209162 12560 net.cpp:137] Memory required for data: 945337348
+I0414 02:38:05.209173 12560 layer_factory.hpp:77] Creating layer emotionClassloss
+I0414 02:38:05.209194 12560 net.cpp:84] Creating Layer emotionClassloss
+I0414 02:38:05.209208 12560 net.cpp:406] emotionClassloss <- fc8_emotion
+I0414 02:38:05.209220 12560 net.cpp:406] emotionClassloss <- emotionclass
+I0414 02:38:05.209235 12560 net.cpp:380] emotionClassloss -> emotionClassloss
+I0414 02:38:05.209252 12560 layer_factory.hpp:77] Creating layer emotionClassloss
+I0414 02:38:05.209374 12560 net.cpp:122] Setting up emotionClassloss
+I0414 02:38:05.209404 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:05.209415 12560 net.cpp:132]     with loss weight 1
+I0414 02:38:05.209429 12560 net.cpp:137] Memory required for data: 945337352
+I0414 02:38:05.209441 12560 net.cpp:198] emotionClassloss needs backward computation.
+I0414 02:38:05.209470 12560 net.cpp:198] personClassloss needs backward computation.
+I0414 02:38:05.209483 12560 net.cpp:198] fc8_emotion needs backward computation.
+I0414 02:38:05.209496 12560 net.cpp:198] drop7_emotion needs backward computation.
+I0414 02:38:05.209506 12560 net.cpp:198] relu7_emotion needs backward computation.
+I0414 02:38:05.209518 12560 net.cpp:198] fc7_emotion needs backward computation.
+I0414 02:38:05.209530 12560 net.cpp:198] drop6_emotion needs backward computation.
+I0414 02:38:05.209542 12560 net.cpp:198] relu6_emotion needs backward computation.
+I0414 02:38:05.209553 12560 net.cpp:198] fc6_emotion needs backward computation.
+I0414 02:38:05.209565 12560 net.cpp:198] fc8_person needs backward computation.
+I0414 02:38:05.209578 12560 net.cpp:198] drop7_person needs backward computation.
+I0414 02:38:05.209589 12560 net.cpp:198] relu7_person needs backward computation.
+I0414 02:38:05.209600 12560 net.cpp:198] fc7_person needs backward computation.
+I0414 02:38:05.209612 12560 net.cpp:198] drop6_person needs backward computation.
+I0414 02:38:05.209625 12560 net.cpp:198] relu6_person needs backward computation.
+I0414 02:38:05.209636 12560 net.cpp:198] fc6_person needs backward computation.
+I0414 02:38:05.209648 12560 net.cpp:198] pool5_pool5_0_split needs backward computation.
+I0414 02:38:05.209661 12560 net.cpp:198] pool5 needs backward computation.
+I0414 02:38:05.209673 12560 net.cpp:198] relu5 needs backward computation.
+I0414 02:38:05.209684 12560 net.cpp:198] conv5 needs backward computation.
+I0414 02:38:05.209697 12560 net.cpp:198] relu4 needs backward computation.
+I0414 02:38:05.209707 12560 net.cpp:198] conv4 needs backward computation.
+I0414 02:38:05.209719 12560 net.cpp:198] relu3 needs backward computation.
+I0414 02:38:05.209731 12560 net.cpp:198] conv3 needs backward computation.
+I0414 02:38:05.209743 12560 net.cpp:198] pool2 needs backward computation.
+I0414 02:38:05.209755 12560 net.cpp:198] norm2 needs backward computation.
+I0414 02:38:05.209767 12560 net.cpp:198] relu2 needs backward computation.
+I0414 02:38:05.209779 12560 net.cpp:198] conv2 needs backward computation.
+I0414 02:38:05.209790 12560 net.cpp:198] pool1 needs backward computation.
+I0414 02:38:05.209802 12560 net.cpp:198] norm1 needs backward computation.
+I0414 02:38:05.209815 12560 net.cpp:198] relu1 needs backward computation.
+I0414 02:38:05.209826 12560 net.cpp:198] conv1 needs backward computation.
+I0414 02:38:05.209838 12560 net.cpp:200] data does not need backward computation.
+I0414 02:38:05.209849 12560 net.cpp:242] This network produces output emotionClassloss
+I0414 02:38:05.209861 12560 net.cpp:242] This network produces output personClassloss
+I0414 02:38:05.209892 12560 net.cpp:255] Network initialization done.
+I0414 02:38:05.210404 12560 solver.cpp:173] Creating test net (#0) specified by net file: train_val.prototxt
+I0414 02:38:05.210461 12560 net.cpp:294] The NetState phase (1) differed from the phase (0) specified by a rule in layer data
+I0414 02:38:05.210808 12560 net.cpp:51] Initializing net from parameters: 
+name: "AlexNet"
+state {
+  phase: TEST
+}
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "personclass"
+  top: "emotionclass"
+  include {
+    phase: TEST
+  }
+  hdf5_data_param {
+    source: "../../Source/AlexPretrain/all_info_large_5emo_testSession.txt"
+    batch_size: 32
+  }
+}
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 2
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "norm1"
+  type: "LRN"
+  bottom: "conv1"
+  top: "norm1"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "norm1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "norm2"
+  type: "LRN"
+  bottom: "conv2"
+  top: "norm2"
+  lrn_param {
+    local_size: 5
+    alpha: 0.0001
+    beta: 0.75
+  }
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "norm2"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "conv4"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "conv5"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "conv5"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "conv5"
+  top: "conv5"
+}
+layer {
+  name: "pool5"
+  type: "Pooling"
+  bottom: "conv5"
+  top: "pool5"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "fc6_person"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6_person"
+  type: "ReLU"
+  bottom: "fc6_person"
+  top: "fc6_person"
+}
+layer {
+  name: "drop6_person"
+  type: "Dropout"
+  bottom: "fc6_person"
+  top: "fc6_person"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_person"
+  type: "InnerProduct"
+  bottom: "fc6_person"
+  top: "fc7_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7_person"
+  type: "ReLU"
+  bottom: "fc7_person"
+  top: "fc7_person"
+}
+layer {
+  name: "drop7_person"
+  type: "Dropout"
+  bottom: "fc7_person"
+  top: "fc7_person"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc8_person"
+  type: "InnerProduct"
+  bottom: "fc7_person"
+  top: "fc8_person"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 65
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "fc6_emotion"
+  type: "InnerProduct"
+  bottom: "pool5"
+  top: "fc6_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu6_emotion"
+  type: "ReLU"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+}
+layer {
+  name: "drop6_emotion"
+  type: "Dropout"
+  bottom: "fc6_emotion"
+  top: "fc6_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc7_emotion"
+  type: "InnerProduct"
+  bottom: "fc6_emotion"
+  top: "fc7_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 4096
+    weight_filler {
+      type: "xavier"
+      std: 0.005
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.1
+    }
+  }
+}
+layer {
+  name: "relu7_emotion"
+  type: "ReLU"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+}
+layer {
+  name: "drop7_emotion"
+  type: "Dropout"
+  bottom: "fc7_emotion"
+  top: "fc7_emotion"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "fc8_emotion"
+  type: "InnerProduct"
+  bottom: "fc7_emotion"
+  top: "fc8_emotion"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 5
+    weight_filler {
+      type: "xavier"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "person_accuracy"
+  type: "Accuracy"
+  bottom: "fc8_person"
+  bottom: "personclass"
+  top: "person_accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "personClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_person"
+  bottom: "personclass"
+  top: "personClassloss"
+}
+layer {
+  name: "emotion_accuracy"
+  type: "Accuracy"
+  bottom: "fc8_emotion"
+  bottom: "emotionclass"
+  top: "emotion_accuracy"
+  include {
+    phase: TEST
+  }
+}
+layer {
+  name: "emotionClassloss"
+  type: "SoftmaxWithLoss"
+  bottom: "fc8_emotion"
+  bottom: "emotionclass"
+  top: "emotionClassloss"
+}
+I0414 02:38:05.211009 12560 layer_factory.hpp:77] Creating layer data
+I0414 02:38:05.211027 12560 net.cpp:84] Creating Layer data
+I0414 02:38:05.211041 12560 net.cpp:380] data -> data
+I0414 02:38:05.211058 12560 net.cpp:380] data -> personclass
+I0414 02:38:05.211076 12560 net.cpp:380] data -> emotionclass
+I0414 02:38:05.211093 12560 hdf5_data_layer.cpp:80] Loading list of HDF5 filenames from: ../../Source/AlexPretrain/all_info_large_5emo_testSession.txt
+I0414 02:38:05.224788 12560 hdf5_data_layer.cpp:94] Number of HDF5 files: 1
+I0414 02:38:07.467818 12560 net.cpp:122] Setting up data
+I0414 02:38:07.467880 12560 net.cpp:129] Top shape: 32 3 158 158 (2396544)
+I0414 02:38:07.467895 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.467910 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.467921 12560 net.cpp:137] Memory required for data: 9586432
+I0414 02:38:07.467939 12560 layer_factory.hpp:77] Creating layer personclass_data_1_split
+I0414 02:38:07.467967 12560 net.cpp:84] Creating Layer personclass_data_1_split
+I0414 02:38:07.467981 12560 net.cpp:406] personclass_data_1_split <- personclass
+I0414 02:38:07.468000 12560 net.cpp:380] personclass_data_1_split -> personclass_data_1_split_0
+I0414 02:38:07.468022 12560 net.cpp:380] personclass_data_1_split -> personclass_data_1_split_1
+I0414 02:38:07.468076 12560 net.cpp:122] Setting up personclass_data_1_split
+I0414 02:38:07.468091 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.468104 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.468116 12560 net.cpp:137] Memory required for data: 9586688
+I0414 02:38:07.468127 12560 layer_factory.hpp:77] Creating layer emotionclass_data_2_split
+I0414 02:38:07.468142 12560 net.cpp:84] Creating Layer emotionclass_data_2_split
+I0414 02:38:07.468154 12560 net.cpp:406] emotionclass_data_2_split <- emotionclass
+I0414 02:38:07.468168 12560 net.cpp:380] emotionclass_data_2_split -> emotionclass_data_2_split_0
+I0414 02:38:07.468200 12560 net.cpp:380] emotionclass_data_2_split -> emotionclass_data_2_split_1
+I0414 02:38:07.468250 12560 net.cpp:122] Setting up emotionclass_data_2_split
+I0414 02:38:07.468264 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.468277 12560 net.cpp:129] Top shape: 32 (32)
+I0414 02:38:07.468303 12560 net.cpp:137] Memory required for data: 9586944
+I0414 02:38:07.468315 12560 layer_factory.hpp:77] Creating layer conv1
+I0414 02:38:07.468338 12560 net.cpp:84] Creating Layer conv1
+I0414 02:38:07.468350 12560 net.cpp:406] conv1 <- data
+I0414 02:38:07.468366 12560 net.cpp:380] conv1 -> conv1
+I0414 02:38:07.469022 12560 net.cpp:122] Setting up conv1
+I0414 02:38:07.469039 12560 net.cpp:129] Top shape: 32 96 74 74 (16822272)
+I0414 02:38:07.469050 12560 net.cpp:137] Memory required for data: 76876032
+I0414 02:38:07.469071 12560 layer_factory.hpp:77] Creating layer relu1
+I0414 02:38:07.469089 12560 net.cpp:84] Creating Layer relu1
+I0414 02:38:07.469100 12560 net.cpp:406] relu1 <- conv1
+I0414 02:38:07.469115 12560 net.cpp:367] relu1 -> conv1 (in-place)
+I0414 02:38:07.469130 12560 net.cpp:122] Setting up relu1
+I0414 02:38:07.469143 12560 net.cpp:129] Top shape: 32 96 74 74 (16822272)
+I0414 02:38:07.469154 12560 net.cpp:137] Memory required for data: 144165120
+I0414 02:38:07.469166 12560 layer_factory.hpp:77] Creating layer norm1
+I0414 02:38:07.469182 12560 net.cpp:84] Creating Layer norm1
+I0414 02:38:07.469193 12560 net.cpp:406] norm1 <- conv1
+I0414 02:38:07.469208 12560 net.cpp:380] norm1 -> norm1
+I0414 02:38:07.469260 12560 net.cpp:122] Setting up norm1
+I0414 02:38:07.469275 12560 net.cpp:129] Top shape: 32 96 74 74 (16822272)
+I0414 02:38:07.469287 12560 net.cpp:137] Memory required for data: 211454208
+I0414 02:38:07.469298 12560 layer_factory.hpp:77] Creating layer pool1
+I0414 02:38:07.469314 12560 net.cpp:84] Creating Layer pool1
+I0414 02:38:07.469326 12560 net.cpp:406] pool1 <- norm1
+I0414 02:38:07.469341 12560 net.cpp:380] pool1 -> pool1
+I0414 02:38:07.469390 12560 net.cpp:122] Setting up pool1
+I0414 02:38:07.469405 12560 net.cpp:129] Top shape: 32 96 37 37 (4205568)
+I0414 02:38:07.469416 12560 net.cpp:137] Memory required for data: 228276480
+I0414 02:38:07.469429 12560 layer_factory.hpp:77] Creating layer conv2
+I0414 02:38:07.469445 12560 net.cpp:84] Creating Layer conv2
+I0414 02:38:07.469457 12560 net.cpp:406] conv2 <- pool1
+I0414 02:38:07.469472 12560 net.cpp:380] conv2 -> conv2
+I0414 02:38:07.477373 12560 net.cpp:122] Setting up conv2
+I0414 02:38:07.477434 12560 net.cpp:129] Top shape: 32 256 37 37 (11214848)
+I0414 02:38:07.477447 12560 net.cpp:137] Memory required for data: 273135872
+I0414 02:38:07.477469 12560 layer_factory.hpp:77] Creating layer relu2
+I0414 02:38:07.477493 12560 net.cpp:84] Creating Layer relu2
+I0414 02:38:07.477505 12560 net.cpp:406] relu2 <- conv2
+I0414 02:38:07.477521 12560 net.cpp:367] relu2 -> conv2 (in-place)
+I0414 02:38:07.477538 12560 net.cpp:122] Setting up relu2
+I0414 02:38:07.477552 12560 net.cpp:129] Top shape: 32 256 37 37 (11214848)
+I0414 02:38:07.477563 12560 net.cpp:137] Memory required for data: 317995264
+I0414 02:38:07.477574 12560 layer_factory.hpp:77] Creating layer norm2
+I0414 02:38:07.477591 12560 net.cpp:84] Creating Layer norm2
+I0414 02:38:07.477602 12560 net.cpp:406] norm2 <- conv2
+I0414 02:38:07.477617 12560 net.cpp:380] norm2 -> norm2
+I0414 02:38:07.477669 12560 net.cpp:122] Setting up norm2
+I0414 02:38:07.477684 12560 net.cpp:129] Top shape: 32 256 37 37 (11214848)
+I0414 02:38:07.477695 12560 net.cpp:137] Memory required for data: 362854656
+I0414 02:38:07.477707 12560 layer_factory.hpp:77] Creating layer pool2
+I0414 02:38:07.477722 12560 net.cpp:84] Creating Layer pool2
+I0414 02:38:07.477735 12560 net.cpp:406] pool2 <- norm2
+I0414 02:38:07.477748 12560 net.cpp:380] pool2 -> pool2
+I0414 02:38:07.477798 12560 net.cpp:122] Setting up pool2
+I0414 02:38:07.477814 12560 net.cpp:129] Top shape: 32 256 18 18 (2654208)
+I0414 02:38:07.477825 12560 net.cpp:137] Memory required for data: 373471488
+I0414 02:38:07.477836 12560 layer_factory.hpp:77] Creating layer conv3
+I0414 02:38:07.477871 12560 net.cpp:84] Creating Layer conv3
+I0414 02:38:07.477883 12560 net.cpp:406] conv3 <- pool2
+I0414 02:38:07.477900 12560 net.cpp:380] conv3 -> conv3
+I0414 02:38:07.489512 12560 net.cpp:122] Setting up conv3
+I0414 02:38:07.489583 12560 net.cpp:129] Top shape: 32 384 18 18 (3981312)
+I0414 02:38:07.489619 12560 net.cpp:137] Memory required for data: 389396736
+I0414 02:38:07.489645 12560 layer_factory.hpp:77] Creating layer relu3
+I0414 02:38:07.489665 12560 net.cpp:84] Creating Layer relu3
+I0414 02:38:07.489678 12560 net.cpp:406] relu3 <- conv3
+I0414 02:38:07.489696 12560 net.cpp:367] relu3 -> conv3 (in-place)
+I0414 02:38:07.489713 12560 net.cpp:122] Setting up relu3
+I0414 02:38:07.489727 12560 net.cpp:129] Top shape: 32 384 18 18 (3981312)
+I0414 02:38:07.489739 12560 net.cpp:137] Memory required for data: 405321984
+I0414 02:38:07.489750 12560 layer_factory.hpp:77] Creating layer conv4
+I0414 02:38:07.489770 12560 net.cpp:84] Creating Layer conv4
+I0414 02:38:07.489781 12560 net.cpp:406] conv4 <- conv3
+I0414 02:38:07.489797 12560 net.cpp:380] conv4 -> conv4
+I0414 02:38:07.507030 12560 net.cpp:122] Setting up conv4
+I0414 02:38:07.507109 12560 net.cpp:129] Top shape: 32 384 18 18 (3981312)
+I0414 02:38:07.507122 12560 net.cpp:137] Memory required for data: 421247232
+I0414 02:38:07.507141 12560 layer_factory.hpp:77] Creating layer relu4
+I0414 02:38:07.507163 12560 net.cpp:84] Creating Layer relu4
+I0414 02:38:07.507176 12560 net.cpp:406] relu4 <- conv4
+I0414 02:38:07.507192 12560 net.cpp:367] relu4 -> conv4 (in-place)
+I0414 02:38:07.507211 12560 net.cpp:122] Setting up relu4
+I0414 02:38:07.507225 12560 net.cpp:129] Top shape: 32 384 18 18 (3981312)
+I0414 02:38:07.507236 12560 net.cpp:137] Memory required for data: 437172480
+I0414 02:38:07.507247 12560 layer_factory.hpp:77] Creating layer conv5
+I0414 02:38:07.507267 12560 net.cpp:84] Creating Layer conv5
+I0414 02:38:07.507279 12560 net.cpp:406] conv5 <- conv4
+I0414 02:38:07.507294 12560 net.cpp:380] conv5 -> conv5
+I0414 02:38:07.518921 12560 net.cpp:122] Setting up conv5
+I0414 02:38:07.518990 12560 net.cpp:129] Top shape: 32 256 18 18 (2654208)
+I0414 02:38:07.519002 12560 net.cpp:137] Memory required for data: 447789312
+I0414 02:38:07.519029 12560 layer_factory.hpp:77] Creating layer relu5
+I0414 02:38:07.519054 12560 net.cpp:84] Creating Layer relu5
+I0414 02:38:07.519068 12560 net.cpp:406] relu5 <- conv5
+I0414 02:38:07.519084 12560 net.cpp:367] relu5 -> conv5 (in-place)
+I0414 02:38:07.519104 12560 net.cpp:122] Setting up relu5
+I0414 02:38:07.519117 12560 net.cpp:129] Top shape: 32 256 18 18 (2654208)
+I0414 02:38:07.519129 12560 net.cpp:137] Memory required for data: 458406144
+I0414 02:38:07.519140 12560 layer_factory.hpp:77] Creating layer pool5
+I0414 02:38:07.519155 12560 net.cpp:84] Creating Layer pool5
+I0414 02:38:07.519166 12560 net.cpp:406] pool5 <- conv5
+I0414 02:38:07.519181 12560 net.cpp:380] pool5 -> pool5
+I0414 02:38:07.519239 12560 net.cpp:122] Setting up pool5
+I0414 02:38:07.519255 12560 net.cpp:129] Top shape: 32 256 9 9 (663552)
+I0414 02:38:07.519266 12560 net.cpp:137] Memory required for data: 461060352
+I0414 02:38:07.519279 12560 layer_factory.hpp:77] Creating layer pool5_pool5_0_split
+I0414 02:38:07.519294 12560 net.cpp:84] Creating Layer pool5_pool5_0_split
+I0414 02:38:07.519304 12560 net.cpp:406] pool5_pool5_0_split <- pool5
+I0414 02:38:07.519320 12560 net.cpp:380] pool5_pool5_0_split -> pool5_pool5_0_split_0
+I0414 02:38:07.519336 12560 net.cpp:380] pool5_pool5_0_split -> pool5_pool5_0_split_1
+I0414 02:38:07.519387 12560 net.cpp:122] Setting up pool5_pool5_0_split
+I0414 02:38:07.519402 12560 net.cpp:129] Top shape: 32 256 9 9 (663552)
+I0414 02:38:07.519415 12560 net.cpp:129] Top shape: 32 256 9 9 (663552)
+I0414 02:38:07.519426 12560 net.cpp:137] Memory required for data: 466368768
+I0414 02:38:07.519438 12560 layer_factory.hpp:77] Creating layer fc6_person
+I0414 02:38:07.519454 12560 net.cpp:84] Creating Layer fc6_person
+I0414 02:38:07.519466 12560 net.cpp:406] fc6_person <- pool5_pool5_0_split_0
+I0414 02:38:07.519501 12560 net.cpp:380] fc6_person -> fc6_person
+I0414 02:38:08.578058 12560 net.cpp:122] Setting up fc6_person
+I0414 02:38:08.578153 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.578167 12560 net.cpp:137] Memory required for data: 466893056
+I0414 02:38:08.578197 12560 layer_factory.hpp:77] Creating layer relu6_person
+I0414 02:38:08.578269 12560 net.cpp:84] Creating Layer relu6_person
+I0414 02:38:08.578285 12560 net.cpp:406] relu6_person <- fc6_person
+I0414 02:38:08.578308 12560 net.cpp:367] relu6_person -> fc6_person (in-place)
+I0414 02:38:08.578331 12560 net.cpp:122] Setting up relu6_person
+I0414 02:38:08.578346 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.578356 12560 net.cpp:137] Memory required for data: 467417344
+I0414 02:38:08.578368 12560 layer_factory.hpp:77] Creating layer drop6_person
+I0414 02:38:08.578385 12560 net.cpp:84] Creating Layer drop6_person
+I0414 02:38:08.578397 12560 net.cpp:406] drop6_person <- fc6_person
+I0414 02:38:08.578411 12560 net.cpp:367] drop6_person -> fc6_person (in-place)
+I0414 02:38:08.578454 12560 net.cpp:122] Setting up drop6_person
+I0414 02:38:08.578469 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.578480 12560 net.cpp:137] Memory required for data: 467941632
+I0414 02:38:08.578492 12560 layer_factory.hpp:77] Creating layer fc7_person
+I0414 02:38:08.578508 12560 net.cpp:84] Creating Layer fc7_person
+I0414 02:38:08.578521 12560 net.cpp:406] fc7_person <- fc6_person
+I0414 02:38:08.578536 12560 net.cpp:380] fc7_person -> fc7_person
+I0414 02:38:08.793647 12560 net.cpp:122] Setting up fc7_person
+I0414 02:38:08.793746 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.793761 12560 net.cpp:137] Memory required for data: 468465920
+I0414 02:38:08.793789 12560 layer_factory.hpp:77] Creating layer relu7_person
+I0414 02:38:08.793818 12560 net.cpp:84] Creating Layer relu7_person
+I0414 02:38:08.793834 12560 net.cpp:406] relu7_person <- fc7_person
+I0414 02:38:08.793858 12560 net.cpp:367] relu7_person -> fc7_person (in-place)
+I0414 02:38:08.793879 12560 net.cpp:122] Setting up relu7_person
+I0414 02:38:08.793893 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.793905 12560 net.cpp:137] Memory required for data: 468990208
+I0414 02:38:08.793916 12560 layer_factory.hpp:77] Creating layer drop7_person
+I0414 02:38:08.793933 12560 net.cpp:84] Creating Layer drop7_person
+I0414 02:38:08.793946 12560 net.cpp:406] drop7_person <- fc7_person
+I0414 02:38:08.793959 12560 net.cpp:367] drop7_person -> fc7_person (in-place)
+I0414 02:38:08.794000 12560 net.cpp:122] Setting up drop7_person
+I0414 02:38:08.794015 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:08.794028 12560 net.cpp:137] Memory required for data: 469514496
+I0414 02:38:08.794039 12560 layer_factory.hpp:77] Creating layer fc8_person
+I0414 02:38:08.794056 12560 net.cpp:84] Creating Layer fc8_person
+I0414 02:38:08.794068 12560 net.cpp:406] fc8_person <- fc7_person
+I0414 02:38:08.794085 12560 net.cpp:380] fc8_person -> fc8_person
+I0414 02:38:08.798487 12560 net.cpp:122] Setting up fc8_person
+I0414 02:38:08.798538 12560 net.cpp:129] Top shape: 32 65 (2080)
+I0414 02:38:08.798550 12560 net.cpp:137] Memory required for data: 469522816
+I0414 02:38:08.798569 12560 layer_factory.hpp:77] Creating layer fc8_person_fc8_person_0_split
+I0414 02:38:08.798589 12560 net.cpp:84] Creating Layer fc8_person_fc8_person_0_split
+I0414 02:38:08.798602 12560 net.cpp:406] fc8_person_fc8_person_0_split <- fc8_person
+I0414 02:38:08.798619 12560 net.cpp:380] fc8_person_fc8_person_0_split -> fc8_person_fc8_person_0_split_0
+I0414 02:38:08.798640 12560 net.cpp:380] fc8_person_fc8_person_0_split -> fc8_person_fc8_person_0_split_1
+I0414 02:38:08.798693 12560 net.cpp:122] Setting up fc8_person_fc8_person_0_split
+I0414 02:38:08.798709 12560 net.cpp:129] Top shape: 32 65 (2080)
+I0414 02:38:08.798722 12560 net.cpp:129] Top shape: 32 65 (2080)
+I0414 02:38:08.798733 12560 net.cpp:137] Memory required for data: 469539456
+I0414 02:38:08.798745 12560 layer_factory.hpp:77] Creating layer fc6_emotion
+I0414 02:38:08.798777 12560 net.cpp:84] Creating Layer fc6_emotion
+I0414 02:38:08.798789 12560 net.cpp:406] fc6_emotion <- pool5_pool5_0_split_1
+I0414 02:38:08.798805 12560 net.cpp:380] fc6_emotion -> fc6_emotion
+I0414 02:38:10.800807 12560 net.cpp:122] Setting up fc6_emotion
+I0414 02:38:11.941885 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.041229 12560 net.cpp:137] Memory required for data: 470063744
+I0414 02:38:13.041273 12560 layer_factory.hpp:77] Creating layer relu6_emotion
+I0414 02:38:13.041296 12560 net.cpp:84] Creating Layer relu6_emotion
+I0414 02:38:13.041311 12560 net.cpp:406] relu6_emotion <- fc6_emotion
+I0414 02:38:13.041327 12560 net.cpp:367] relu6_emotion -> fc6_emotion (in-place)
+I0414 02:38:13.041348 12560 net.cpp:122] Setting up relu6_emotion
+I0414 02:38:13.041363 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.041374 12560 net.cpp:137] Memory required for data: 470588032
+I0414 02:38:13.041386 12560 layer_factory.hpp:77] Creating layer drop6_emotion
+I0414 02:38:13.041402 12560 net.cpp:84] Creating Layer drop6_emotion
+I0414 02:38:13.041414 12560 net.cpp:406] drop6_emotion <- fc6_emotion
+I0414 02:38:13.041429 12560 net.cpp:367] drop6_emotion -> fc6_emotion (in-place)
+I0414 02:38:13.041510 12560 net.cpp:122] Setting up drop6_emotion
+I0414 02:38:13.041527 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.041538 12560 net.cpp:137] Memory required for data: 471112320
+I0414 02:38:13.041549 12560 layer_factory.hpp:77] Creating layer fc7_emotion
+I0414 02:38:13.041566 12560 net.cpp:84] Creating Layer fc7_emotion
+I0414 02:38:13.041579 12560 net.cpp:406] fc7_emotion <- fc6_emotion
+I0414 02:38:13.041594 12560 net.cpp:380] fc7_emotion -> fc7_emotion
+I0414 02:38:13.252260 12560 net.cpp:122] Setting up fc7_emotion
+I0414 02:38:13.252354 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.252368 12560 net.cpp:137] Memory required for data: 471636608
+I0414 02:38:13.252398 12560 layer_factory.hpp:77] Creating layer relu7_emotion
+I0414 02:38:13.252425 12560 net.cpp:84] Creating Layer relu7_emotion
+I0414 02:38:13.252439 12560 net.cpp:406] relu7_emotion <- fc7_emotion
+I0414 02:38:13.252456 12560 net.cpp:367] relu7_emotion -> fc7_emotion (in-place)
+I0414 02:38:13.252475 12560 net.cpp:122] Setting up relu7_emotion
+I0414 02:38:13.252490 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.252501 12560 net.cpp:137] Memory required for data: 472160896
+I0414 02:38:13.252512 12560 layer_factory.hpp:77] Creating layer drop7_emotion
+I0414 02:38:13.252538 12560 net.cpp:84] Creating Layer drop7_emotion
+I0414 02:38:13.252550 12560 net.cpp:406] drop7_emotion <- fc7_emotion
+I0414 02:38:13.252564 12560 net.cpp:367] drop7_emotion -> fc7_emotion (in-place)
+I0414 02:38:13.252605 12560 net.cpp:122] Setting up drop7_emotion
+I0414 02:38:13.252620 12560 net.cpp:129] Top shape: 32 4096 (131072)
+I0414 02:38:13.252632 12560 net.cpp:137] Memory required for data: 472685184
+I0414 02:38:13.252645 12560 layer_factory.hpp:77] Creating layer fc8_emotion
+I0414 02:38:13.252661 12560 net.cpp:84] Creating Layer fc8_emotion
+I0414 02:38:13.252673 12560 net.cpp:406] fc8_emotion <- fc7_emotion
+I0414 02:38:13.252689 12560 net.cpp:380] fc8_emotion -> fc8_emotion
+I0414 02:38:13.253077 12560 net.cpp:122] Setting up fc8_emotion
+I0414 02:38:13.253093 12560 net.cpp:129] Top shape: 32 5 (160)
+I0414 02:38:13.253104 12560 net.cpp:137] Memory required for data: 472685824
+I0414 02:38:13.253120 12560 layer_factory.hpp:77] Creating layer fc8_emotion_fc8_emotion_0_split
+I0414 02:38:13.253137 12560 net.cpp:84] Creating Layer fc8_emotion_fc8_emotion_0_split
+I0414 02:38:13.253149 12560 net.cpp:406] fc8_emotion_fc8_emotion_0_split <- fc8_emotion
+I0414 02:38:13.253165 12560 net.cpp:380] fc8_emotion_fc8_emotion_0_split -> fc8_emotion_fc8_emotion_0_split_0
+I0414 02:38:13.253181 12560 net.cpp:380] fc8_emotion_fc8_emotion_0_split -> fc8_emotion_fc8_emotion_0_split_1
+I0414 02:38:13.253234 12560 net.cpp:122] Setting up fc8_emotion_fc8_emotion_0_split
+I0414 02:38:13.253249 12560 net.cpp:129] Top shape: 32 5 (160)
+I0414 02:38:13.253262 12560 net.cpp:129] Top shape: 32 5 (160)
+I0414 02:38:13.253293 12560 net.cpp:137] Memory required for data: 472687104
+I0414 02:38:13.253305 12560 layer_factory.hpp:77] Creating layer person_accuracy
+I0414 02:38:14.398407 12560 net.cpp:84] Creating Layer person_accuracy
+I0414 02:38:14.398440 12560 net.cpp:406] person_accuracy <- fc8_person_fc8_person_0_split_0
+I0414 02:38:14.398471 12560 net.cpp:406] person_accuracy <- personclass_data_1_split_0
+I0414 02:38:14.398488 12560 net.cpp:380] person_accuracy -> person_accuracy
+I0414 02:38:14.398514 12560 net.cpp:122] Setting up person_accuracy
+I0414 02:38:14.398528 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:14.398540 12560 net.cpp:137] Memory required for data: 472687108
+I0414 02:38:14.398551 12560 layer_factory.hpp:77] Creating layer personClassloss
+I0414 02:38:15.681725 12560 net.cpp:84] Creating Layer personClassloss
+I0414 02:38:15.681756 12560 net.cpp:406] personClassloss <- fc8_person_fc8_person_0_split_1
+I0414 02:38:15.681771 12560 net.cpp:406] personClassloss <- personclass_data_1_split_1
+I0414 02:38:15.681785 12560 net.cpp:380] personClassloss -> personClassloss
+I0414 02:38:16.175060 12560 layer_factory.hpp:77] Creating layer personClassloss
+I0414 02:38:16.290930 12560 net.cpp:122] Setting up personClassloss
+I0414 02:38:16.290956 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:16.290966 12560 net.cpp:132]     with loss weight 1
+I0414 02:38:18.259634 12560 net.cpp:137] Memory required for data: 472687112
+I0414 02:38:18.259665 12560 layer_factory.hpp:77] Creating layer emotion_accuracy
+I0414 02:38:18.259688 12560 net.cpp:84] Creating Layer emotion_accuracy
+I0414 02:38:18.259702 12560 net.cpp:406] emotion_accuracy <- fc8_emotion_fc8_emotion_0_split_0
+I0414 02:38:18.259742 12560 net.cpp:406] emotion_accuracy <- emotionclass_data_2_split_0
+I0414 02:38:18.259763 12560 net.cpp:380] emotion_accuracy -> emotion_accuracy
+I0414 02:38:18.259794 12560 net.cpp:122] Setting up emotion_accuracy
+I0414 02:38:18.259810 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:18.259821 12560 net.cpp:137] Memory required for data: 472687116
+I0414 02:38:18.259832 12560 layer_factory.hpp:77] Creating layer emotionClassloss
+I0414 02:38:18.259847 12560 net.cpp:84] Creating Layer emotionClassloss
+I0414 02:38:18.259860 12560 net.cpp:406] emotionClassloss <- fc8_emotion_fc8_emotion_0_split_1
+I0414 02:38:18.259872 12560 net.cpp:406] emotionClassloss <- emotionclass_data_2_split_1
+I0414 02:38:18.259887 12560 net.cpp:380] emotionClassloss -> emotionClassloss
+I0414 02:38:18.259914 12560 layer_factory.hpp:77] Creating layer emotionClassloss
+I0414 02:38:18.260082 12560 net.cpp:122] Setting up emotionClassloss
+I0414 02:38:18.260097 12560 net.cpp:129] Top shape: (1)
+I0414 02:38:18.260108 12560 net.cpp:132]     with loss weight 1
+I0414 02:38:18.260124 12560 net.cpp:137] Memory required for data: 472687120
+I0414 02:38:18.260136 12560 net.cpp:198] emotionClassloss needs backward computation.
+I0414 02:38:18.260149 12560 net.cpp:200] emotion_accuracy does not need backward computation.
+I0414 02:38:18.260161 12560 net.cpp:198] personClassloss needs backward computation.
+I0414 02:38:18.260174 12560 net.cpp:200] person_accuracy does not need backward computation.
+I0414 02:38:18.260187 12560 net.cpp:198] fc8_emotion_fc8_emotion_0_split needs backward computation.
+I0414 02:38:18.260200 12560 net.cpp:198] fc8_emotion needs backward computation.
+I0414 02:38:18.260212 12560 net.cpp:198] drop7_emotion needs backward computation.
+I0414 02:38:18.260224 12560 net.cpp:198] relu7_emotion needs backward computation.
+I0414 02:38:18.260236 12560 net.cpp:198] fc7_emotion needs backward computation.
+I0414 02:38:18.260247 12560 net.cpp:198] drop6_emotion needs backward computation.
+I0414 02:38:18.260259 12560 net.cpp:198] relu6_emotion needs backward computation.
+I0414 02:38:18.260270 12560 net.cpp:198] fc6_emotion needs backward computation.
+I0414 02:38:18.260283 12560 net.cpp:198] fc8_person_fc8_person_0_split needs backward computation.
+I0414 02:38:18.260295 12560 net.cpp:198] fc8_person needs backward computation.
+I0414 02:38:18.260308 12560 net.cpp:198] drop7_person needs backward computation.
+I0414 02:38:18.260327 12560 net.cpp:198] relu7_person needs backward computation.
+I0414 02:38:18.260339 12560 net.cpp:198] fc7_person needs backward computation.
+I0414 02:38:18.260350 12560 net.cpp:198] drop6_person needs backward computation.
+I0414 02:38:18.260375 12560 net.cpp:198] relu6_person needs backward computation.
+I0414 02:38:18.260386 12560 net.cpp:198] fc6_person needs backward computation.
+I0414 02:38:18.260399 12560 net.cpp:198] pool5_pool5_0_split needs backward computation.
+I0414 02:38:18.260411 12560 net.cpp:198] pool5 needs backward computation.
+I0414 02:38:18.260423 12560 net.cpp:198] relu5 needs backward computation.
+I0414 02:38:18.260434 12560 net.cpp:198] conv5 needs backward computation.
+I0414 02:38:18.260447 12560 net.cpp:198] relu4 needs backward computation.
+I0414 02:38:18.260458 12560 net.cpp:198] conv4 needs backward computation.
+I0414 02:38:18.260470 12560 net.cpp:198] relu3 needs backward computation.
+I0414 02:38:18.260483 12560 net.cpp:198] conv3 needs backward computation.
+I0414 02:38:18.260494 12560 net.cpp:198] pool2 needs backward computation.
+I0414 02:38:18.260505 12560 net.cpp:198] norm2 needs backward computation.
+I0414 02:38:18.260517 12560 net.cpp:198] relu2 needs backward computation.
+I0414 02:38:18.260529 12560 net.cpp:198] conv2 needs backward computation.
+I0414 02:38:18.260541 12560 net.cpp:198] pool1 needs backward computation.
+I0414 02:38:18.260553 12560 net.cpp:198] norm1 needs backward computation.
+I0414 02:38:18.260565 12560 net.cpp:198] relu1 needs backward computation.
+I0414 02:38:18.260576 12560 net.cpp:198] conv1 needs backward computation.
+I0414 02:38:18.260588 12560 net.cpp:200] emotionclass_data_2_split does not need backward computation.
+I0414 02:38:18.260601 12560 net.cpp:200] personclass_data_1_split does not need backward computation.
+I0414 02:38:18.260614 12560 net.cpp:200] data does not need backward computation.
+I0414 02:38:18.260625 12560 net.cpp:242] This network produces output emotionClassloss
+I0414 02:38:18.260637 12560 net.cpp:242] This network produces output emotion_accuracy
+I0414 02:38:18.260649 12560 net.cpp:242] This network produces output personClassloss
+I0414 02:38:18.260661 12560 net.cpp:242] This network produces output person_accuracy
+I0414 02:38:18.459713 12560 net.cpp:255] Network initialization done.
+I0414 02:38:19.778906 12560 solver.cpp:56] Solver scaffolding done.
+I0414 02:38:20.682423 12560 caffe.cpp:248] Starting Optimization
+I0414 02:38:20.911566 12560 solver.cpp:273] Solving AlexNet
+I0414 02:38:20.911582 12560 solver.cpp:274] Learning Rate Policy: step
+I0414 02:38:22.530952 12560 solver.cpp:331] Iteration 0, Testing net (#0)
+I0414 02:38:32.831416 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.65556 (* 1 = 1.65556 loss)
+I0414 02:38:32.902359 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.19875
+I0414 02:38:32.902381 12560 solver.cpp:398]     Test net output #2: personClassloss = 4.18147 (* 1 = 4.18147 loss)
+I0414 02:38:32.902396 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0
+I0414 02:38:34.214745 12560 solver.cpp:219] Iteration 0 (0 iter/s, 11.9002s/50 iters), loss = 5.919
+I0414 02:38:34.214820 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.75923 (* 1 = 1.75923 loss)
+I0414 02:38:34.214840 12560 solver.cpp:238]     Train net output #1: personClassloss = 4.15977 (* 1 = 4.15977 loss)
+I0414 02:38:36.234035 12560 sgd_solver.cpp:105] Iteration 0, lr = 0.001
+I0414 02:38:53.874096 12560 solver.cpp:219] Iteration 50 (2.54327 iter/s, 19.6597s/50 iters), loss = 5.81464
+I0414 02:38:53.874181 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.61753 (* 1 = 1.61753 loss)
+I0414 02:38:53.874202 12560 solver.cpp:238]     Train net output #1: personClassloss = 4.19711 (* 1 = 4.19711 loss)
+I0414 02:38:53.874217 12560 sgd_solver.cpp:105] Iteration 50, lr = 0.001
+I0414 02:39:11.601814 12560 solver.cpp:219] Iteration 100 (2.82039 iter/s, 17.728s/50 iters), loss = 4.9819
+I0414 02:39:11.602002 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.60304 (* 1 = 1.60304 loss)
+I0414 02:39:11.602031 12560 solver.cpp:238]     Train net output #1: personClassloss = 3.37887 (* 1 = 3.37887 loss)
+I0414 02:39:11.602063 12560 sgd_solver.cpp:105] Iteration 100, lr = 0.001
+I0414 02:39:29.339527 12560 solver.cpp:219] Iteration 150 (2.81882 iter/s, 17.7379s/50 iters), loss = 4.27354
+I0414 02:39:29.339606 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.58703 (* 1 = 1.58703 loss)
+I0414 02:39:29.339627 12560 solver.cpp:238]     Train net output #1: personClassloss = 2.68651 (* 1 = 2.68651 loss)
+I0414 02:39:29.339643 12560 sgd_solver.cpp:105] Iteration 150, lr = 0.001
+I0414 02:39:47.081152 12560 solver.cpp:219] Iteration 200 (2.81818 iter/s, 17.7419s/50 iters), loss = 3.8845
+I0414 02:39:47.081431 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.57393 (* 1 = 1.57393 loss)
+I0414 02:39:47.081475 12560 solver.cpp:238]     Train net output #1: personClassloss = 2.31057 (* 1 = 2.31057 loss)
+I0414 02:39:47.081496 12560 sgd_solver.cpp:105] Iteration 200, lr = 0.001
+I0414 02:40:04.833050 12560 solver.cpp:219] Iteration 250 (2.81658 iter/s, 17.752s/50 iters), loss = 3.96388
+I0414 02:40:04.833138 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.64299 (* 1 = 1.64299 loss)
+I0414 02:40:04.833159 12560 solver.cpp:238]     Train net output #1: personClassloss = 2.32089 (* 1 = 2.32089 loss)
+I0414 02:40:04.833176 12560 sgd_solver.cpp:105] Iteration 250, lr = 0.001
+I0414 02:40:22.609598 12560 solver.cpp:219] Iteration 300 (2.81265 iter/s, 17.7768s/50 iters), loss = 2.66127
+I0414 02:40:22.609830 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.31213 (* 1 = 1.31213 loss)
+I0414 02:40:22.609871 12560 solver.cpp:238]     Train net output #1: personClassloss = 1.34914 (* 1 = 1.34914 loss)
+I0414 02:40:22.609894 12560 sgd_solver.cpp:105] Iteration 300, lr = 0.001
+I0414 02:40:40.387872 12560 solver.cpp:219] Iteration 350 (2.8124 iter/s, 17.7784s/50 iters), loss = 2.37098
+I0414 02:40:40.387950 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.1531 (* 1 = 1.1531 loss)
+I0414 02:40:40.387970 12560 solver.cpp:238]     Train net output #1: personClassloss = 1.21788 (* 1 = 1.21788 loss)
+I0414 02:40:40.387987 12560 sgd_solver.cpp:105] Iteration 350, lr = 0.001
+I0414 02:40:58.162070 12560 solver.cpp:219] Iteration 400 (2.81302 iter/s, 17.7745s/50 iters), loss = 2.4056
+I0414 02:40:58.162201 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 1.24621 (* 1 = 1.24621 loss)
+I0414 02:40:58.162222 12560 solver.cpp:238]     Train net output #1: personClassloss = 1.15939 (* 1 = 1.15939 loss)
+I0414 02:40:58.162241 12560 sgd_solver.cpp:105] Iteration 400, lr = 0.001
+I0414 02:41:15.942914 12560 solver.cpp:219] Iteration 450 (2.81198 iter/s, 17.7811s/50 iters), loss = 1.54569
+I0414 02:41:15.943003 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.7958 (* 1 = 0.7958 loss)
+I0414 02:41:15.943024 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.749885 (* 1 = 0.749885 loss)
+I0414 02:41:15.943043 12560 sgd_solver.cpp:105] Iteration 450, lr = 0.001
+I0414 02:41:33.720325 12560 solver.cpp:219] Iteration 500 (2.81252 iter/s, 17.7777s/50 iters), loss = 1.12043
+I0414 02:41:33.720541 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.671467 (* 1 = 0.671467 loss)
+I0414 02:41:33.720580 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.448962 (* 1 = 0.448962 loss)
+I0414 02:41:33.720603 12560 sgd_solver.cpp:105] Iteration 500, lr = 0.0005
+I0414 02:41:51.498092 12560 solver.cpp:219] Iteration 550 (2.81248 iter/s, 17.7779s/50 iters), loss = 0.705265
+I0414 02:41:51.498219 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.476434 (* 1 = 0.476434 loss)
+I0414 02:41:51.498240 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.228831 (* 1 = 0.228831 loss)
+I0414 02:41:51.498257 12560 sgd_solver.cpp:105] Iteration 550, lr = 0.0005
+I0414 02:42:09.276449 12560 solver.cpp:219] Iteration 600 (2.81237 iter/s, 17.7786s/50 iters), loss = 0.57057
+I0414 02:42:09.276722 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.312344 (* 1 = 0.312344 loss)
+I0414 02:42:09.276762 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.258226 (* 1 = 0.258226 loss)
+I0414 02:42:09.276783 12560 sgd_solver.cpp:105] Iteration 600, lr = 0.0005
+I0414 02:42:27.053717 12560 solver.cpp:219] Iteration 650 (2.81256 iter/s, 17.7774s/50 iters), loss = 0.339009
+I0414 02:42:27.053797 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.271774 (* 1 = 0.271774 loss)
+I0414 02:42:27.053817 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0672345 (* 1 = 0.0672345 loss)
+I0414 02:42:27.053835 12560 sgd_solver.cpp:105] Iteration 650, lr = 0.0005
+I0414 02:42:44.834998 12560 solver.cpp:219] Iteration 700 (2.8119 iter/s, 17.7815s/50 iters), loss = 0.451565
+I0414 02:42:44.835214 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.304168 (* 1 = 0.304168 loss)
+I0414 02:42:44.835256 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.147397 (* 1 = 0.147397 loss)
+I0414 02:42:44.835279 12560 sgd_solver.cpp:105] Iteration 700, lr = 0.0005
+I0414 02:43:02.648496 12560 solver.cpp:219] Iteration 750 (2.80684 iter/s, 17.8136s/50 iters), loss = 0.382954
+I0414 02:43:02.648587 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.200779 (* 1 = 0.200779 loss)
+I0414 02:43:02.648608 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.182176 (* 1 = 0.182176 loss)
+I0414 02:43:02.648627 12560 sgd_solver.cpp:105] Iteration 750, lr = 0.0005
+I0414 02:43:20.423060 12560 solver.cpp:219] Iteration 800 (2.81297 iter/s, 17.7748s/50 iters), loss = 0.418315
+I0414 02:43:20.423290 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.264885 (* 1 = 0.264885 loss)
+I0414 02:43:20.423331 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.15343 (* 1 = 0.15343 loss)
+I0414 02:43:20.423353 12560 sgd_solver.cpp:105] Iteration 800, lr = 0.0005
+I0414 02:43:38.205081 12560 solver.cpp:219] Iteration 850 (2.81181 iter/s, 17.7822s/50 iters), loss = 0.239309
+I0414 02:43:38.205166 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.163146 (* 1 = 0.163146 loss)
+I0414 02:43:38.205188 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0761634 (* 1 = 0.0761634 loss)
+I0414 02:43:38.205206 12560 sgd_solver.cpp:105] Iteration 850, lr = 0.0005
+I0414 02:43:55.984616 12560 solver.cpp:219] Iteration 900 (2.81218 iter/s, 17.7798s/50 iters), loss = 0.30331
+I0414 02:43:55.984843 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.231879 (* 1 = 0.231879 loss)
+I0414 02:43:55.984887 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.071431 (* 1 = 0.071431 loss)
+I0414 02:43:55.984910 12560 sgd_solver.cpp:105] Iteration 900, lr = 0.0005
+I0414 02:44:13.763896 12560 solver.cpp:219] Iteration 950 (2.81224 iter/s, 17.7794s/50 iters), loss = 0.347049
+I0414 02:44:13.763979 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.196555 (* 1 = 0.196555 loss)
+I0414 02:44:13.764000 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.150494 (* 1 = 0.150494 loss)
+I0414 02:44:13.764016 12560 sgd_solver.cpp:105] Iteration 950, lr = 0.0005
+I0414 02:44:31.058617 12560 solver.cpp:331] Iteration 1000, Testing net (#0)
+I0414 02:44:36.928982 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 0.984896 (* 1 = 0.984896 loss)
+I0414 02:44:36.929033 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.73875
+I0414 02:44:36.929054 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.240852 (* 1 = 0.240852 loss)
+I0414 02:44:36.929070 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.91625
+I0414 02:44:37.234493 12560 solver.cpp:219] Iteration 1000 (2.13029 iter/s, 23.471s/50 iters), loss = 0.395177
+I0414 02:44:37.234580 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.252494 (* 1 = 0.252494 loss)
+I0414 02:44:37.234601 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.142682 (* 1 = 0.142682 loss)
+I0414 02:44:37.234635 12560 sgd_solver.cpp:105] Iteration 1000, lr = 0.00025
+I0414 02:44:55.008627 12560 solver.cpp:219] Iteration 1050 (2.81304 iter/s, 17.7744s/50 iters), loss = 0.12513
+I0414 02:44:55.008713 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0859593 (* 1 = 0.0859593 loss)
+I0414 02:44:55.008734 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0391703 (* 1 = 0.0391703 loss)
+I0414 02:44:55.008752 12560 sgd_solver.cpp:105] Iteration 1050, lr = 0.00025
+I0414 02:45:12.789006 12560 solver.cpp:219] Iteration 1100 (2.81205 iter/s, 17.7806s/50 iters), loss = 0.106006
+I0414 02:45:12.789288 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0480768 (* 1 = 0.0480768 loss)
+I0414 02:45:12.789330 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0579295 (* 1 = 0.0579295 loss)
+I0414 02:45:12.789353 12560 sgd_solver.cpp:105] Iteration 1100, lr = 0.00025
+I0414 02:45:30.569694 12560 solver.cpp:219] Iteration 1150 (2.81203 iter/s, 17.7808s/50 iters), loss = 0.133634
+I0414 02:45:30.569774 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.121988 (* 1 = 0.121988 loss)
+I0414 02:45:30.569795 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0116454 (* 1 = 0.0116454 loss)
+I0414 02:45:30.569813 12560 sgd_solver.cpp:105] Iteration 1150, lr = 0.00025
+I0414 02:45:48.346184 12560 solver.cpp:219] Iteration 1200 (2.81266 iter/s, 17.7767s/50 iters), loss = 0.179941
+I0414 02:45:48.346418 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0855326 (* 1 = 0.0855326 loss)
+I0414 02:45:48.346462 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.094408 (* 1 = 0.094408 loss)
+I0414 02:45:48.346485 12560 sgd_solver.cpp:105] Iteration 1200, lr = 0.00025
+I0414 02:46:06.128836 12560 solver.cpp:219] Iteration 1250 (2.81171 iter/s, 17.7828s/50 iters), loss = 0.0277231
+I0414 02:46:06.128926 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00485567 (* 1 = 0.00485567 loss)
+I0414 02:46:06.128948 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0228674 (* 1 = 0.0228674 loss)
+I0414 02:46:06.128968 12560 sgd_solver.cpp:105] Iteration 1250, lr = 0.00025
+I0414 02:46:23.911661 12560 solver.cpp:219] Iteration 1300 (2.81167 iter/s, 17.7831s/50 iters), loss = 0.00887992
+I0414 02:46:23.911897 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00189209 (* 1 = 0.00189209 loss)
+I0414 02:46:23.911941 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00698779 (* 1 = 0.00698779 loss)
+I0414 02:46:23.911963 12560 sgd_solver.cpp:105] Iteration 1300, lr = 0.00025
+I0414 02:46:41.693367 12560 solver.cpp:219] Iteration 1350 (2.81186 iter/s, 17.7818s/50 iters), loss = 0.0281146
+I0414 02:46:41.693449 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0137991 (* 1 = 0.0137991 loss)
+I0414 02:46:41.693470 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0143156 (* 1 = 0.0143156 loss)
+I0414 02:46:41.693488 12560 sgd_solver.cpp:105] Iteration 1350, lr = 0.00025
+I0414 02:46:59.475546 12560 solver.cpp:219] Iteration 1400 (2.81177 iter/s, 17.7824s/50 iters), loss = 0.101907
+I0414 02:46:59.475795 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0603455 (* 1 = 0.0603455 loss)
+I0414 02:46:59.475837 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0415611 (* 1 = 0.0415611 loss)
+I0414 02:46:59.475859 12560 sgd_solver.cpp:105] Iteration 1400, lr = 0.00025
+I0414 02:47:17.257943 12560 solver.cpp:219] Iteration 1450 (2.81175 iter/s, 17.7825s/50 iters), loss = 0.0955354
+I0414 02:47:17.258033 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.047607 (* 1 = 0.047607 loss)
+I0414 02:47:17.258054 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0479283 (* 1 = 0.0479283 loss)
+I0414 02:47:17.258071 12560 sgd_solver.cpp:105] Iteration 1450, lr = 0.00025
+I0414 02:47:35.039986 12560 solver.cpp:219] Iteration 1500 (2.81179 iter/s, 17.7823s/50 iters), loss = 0.143213
+I0414 02:47:35.040263 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.126673 (* 1 = 0.126673 loss)
+I0414 02:47:35.040305 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0165398 (* 1 = 0.0165398 loss)
+I0414 02:47:35.040328 12560 sgd_solver.cpp:105] Iteration 1500, lr = 0.000125
+I0414 02:47:52.820869 12560 solver.cpp:219] Iteration 1550 (2.812 iter/s, 17.781s/50 iters), loss = 0.00624989
+I0414 02:47:52.820965 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00184165 (* 1 = 0.00184165 loss)
+I0414 02:47:52.820986 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00440826 (* 1 = 0.00440826 loss)
+I0414 02:47:52.821007 12560 sgd_solver.cpp:105] Iteration 1550, lr = 0.000125
+I0414 02:48:10.602639 12560 solver.cpp:219] Iteration 1600 (2.81183 iter/s, 17.782s/50 iters), loss = 0.0328571
+I0414 02:48:10.602861 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0236378 (* 1 = 0.0236378 loss)
+I0414 02:48:10.602902 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00921925 (* 1 = 0.00921925 loss)
+I0414 02:48:10.602926 12560 sgd_solver.cpp:105] Iteration 1600, lr = 0.000125
+I0414 02:48:28.382489 12560 solver.cpp:219] Iteration 1650 (2.81215 iter/s, 17.78s/50 iters), loss = 0.0115667
+I0414 02:48:28.382582 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00492382 (* 1 = 0.00492382 loss)
+I0414 02:48:28.382603 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00664289 (* 1 = 0.00664289 loss)
+I0414 02:48:28.382622 12560 sgd_solver.cpp:105] Iteration 1650, lr = 0.000125
+I0414 02:48:46.165004 12560 solver.cpp:219] Iteration 1700 (2.81172 iter/s, 17.7827s/50 iters), loss = 0.0184092
+I0414 02:48:46.165220 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00378233 (* 1 = 0.00378233 loss)
+I0414 02:48:46.165262 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0146269 (* 1 = 0.0146269 loss)
+I0414 02:48:46.165287 12560 sgd_solver.cpp:105] Iteration 1700, lr = 0.000125
+I0414 02:49:03.943681 12560 solver.cpp:219] Iteration 1750 (2.81234 iter/s, 17.7788s/50 iters), loss = 0.0216151
+I0414 02:49:03.943774 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0148913 (* 1 = 0.0148913 loss)
+I0414 02:49:03.943795 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00672382 (* 1 = 0.00672382 loss)
+I0414 02:49:03.943814 12560 sgd_solver.cpp:105] Iteration 1750, lr = 0.000125
+I0414 02:49:21.724769 12560 solver.cpp:219] Iteration 1800 (2.81194 iter/s, 17.7813s/50 iters), loss = 0.0273798
+I0414 02:49:21.725005 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0140436 (* 1 = 0.0140436 loss)
+I0414 02:49:21.725049 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0133362 (* 1 = 0.0133362 loss)
+I0414 02:49:21.725071 12560 sgd_solver.cpp:105] Iteration 1800, lr = 0.000125
+I0414 02:49:39.506165 12560 solver.cpp:219] Iteration 1850 (2.81191 iter/s, 17.7815s/50 iters), loss = 0.00682104
+I0414 02:49:39.506247 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00603347 (* 1 = 0.00603347 loss)
+I0414 02:49:39.506268 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000787595 (* 1 = 0.000787595 loss)
+I0414 02:49:39.506286 12560 sgd_solver.cpp:105] Iteration 1850, lr = 0.000125
+I0414 02:49:57.284543 12560 solver.cpp:219] Iteration 1900 (2.81237 iter/s, 17.7786s/50 iters), loss = 0.0131971
+I0414 02:49:57.284680 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0109315 (* 1 = 0.0109315 loss)
+I0414 02:49:57.284701 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00226561 (* 1 = 0.00226561 loss)
+I0414 02:49:57.284720 12560 sgd_solver.cpp:105] Iteration 1900, lr = 0.000125
+I0414 02:50:15.066524 12560 solver.cpp:219] Iteration 1950 (2.81181 iter/s, 17.7821s/50 iters), loss = 0.0307689
+I0414 02:50:15.066623 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00626028 (* 1 = 0.00626028 loss)
+I0414 02:50:15.066645 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0245086 (* 1 = 0.0245086 loss)
+I0414 02:50:15.066678 12560 sgd_solver.cpp:105] Iteration 1950, lr = 0.000125
+I0414 02:50:32.362939 12560 solver.cpp:331] Iteration 2000, Testing net (#0)
+I0414 02:50:38.232923 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.84121 (* 1 = 1.84121 loss)
+I0414 02:50:38.232980 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.7325
+I0414 02:50:38.233000 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0685744 (* 1 = 0.0685744 loss)
+I0414 02:50:38.233013 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.989062
+I0414 02:50:38.536243 12560 solver.cpp:219] Iteration 2000 (2.13038 iter/s, 23.47s/50 iters), loss = 0.0160968
+I0414 02:50:38.536327 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0124259 (* 1 = 0.0124259 loss)
+I0414 02:50:38.536348 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00367083 (* 1 = 0.00367083 loss)
+I0414 02:50:38.536367 12560 sgd_solver.cpp:105] Iteration 2000, lr = 6.25e-05
+I0414 02:50:56.310078 12560 solver.cpp:219] Iteration 2050 (2.81309 iter/s, 17.7741s/50 iters), loss = 0.00549581
+I0414 02:50:56.310169 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00162864 (* 1 = 0.00162864 loss)
+I0414 02:50:56.310191 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00386717 (* 1 = 0.00386717 loss)
+I0414 02:50:56.310211 12560 sgd_solver.cpp:105] Iteration 2050, lr = 6.25e-05
+I0414 02:51:14.090742 12560 solver.cpp:219] Iteration 2100 (2.81201 iter/s, 17.7809s/50 iters), loss = 0.0128732
+I0414 02:51:14.090983 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00920665 (* 1 = 0.00920665 loss)
+I0414 02:51:14.091027 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0036665 (* 1 = 0.0036665 loss)
+I0414 02:51:14.091050 12560 sgd_solver.cpp:105] Iteration 2100, lr = 6.25e-05
+I0414 02:51:31.870543 12560 solver.cpp:219] Iteration 2150 (2.81217 iter/s, 17.7799s/50 iters), loss = 0.0170044
+I0414 02:51:31.870628 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0146529 (* 1 = 0.0146529 loss)
+I0414 02:51:31.870651 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00235151 (* 1 = 0.00235151 loss)
+I0414 02:51:31.870669 12560 sgd_solver.cpp:105] Iteration 2150, lr = 6.25e-05
+I0414 02:51:49.651883 12560 solver.cpp:219] Iteration 2200 (2.8119 iter/s, 17.7815s/50 iters), loss = 0.00524076
+I0414 02:51:49.652019 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00186909 (* 1 = 0.00186909 loss)
+I0414 02:51:49.652041 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00337168 (* 1 = 0.00337168 loss)
+I0414 02:51:49.652061 12560 sgd_solver.cpp:105] Iteration 2200, lr = 6.25e-05
+I0414 02:52:07.436373 12560 solver.cpp:219] Iteration 2250 (2.81141 iter/s, 17.7847s/50 iters), loss = 0.00285709
+I0414 02:52:07.436457 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000287343 (* 1 = 0.000287343 loss)
+I0414 02:52:07.436480 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00256976 (* 1 = 0.00256976 loss)
+I0414 02:52:07.436497 12560 sgd_solver.cpp:105] Iteration 2250, lr = 6.25e-05
+I0414 02:52:25.216357 12560 solver.cpp:219] Iteration 2300 (2.81212 iter/s, 17.7802s/50 iters), loss = 0.0172792
+I0414 02:52:25.216578 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0111519 (* 1 = 0.0111519 loss)
+I0414 02:52:25.216619 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0061273 (* 1 = 0.0061273 loss)
+I0414 02:52:25.216644 12560 sgd_solver.cpp:105] Iteration 2300, lr = 6.25e-05
+I0414 02:52:42.995420 12560 solver.cpp:219] Iteration 2350 (2.81228 iter/s, 17.7792s/50 iters), loss = 0.00211521
+I0414 02:52:42.995501 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000209186 (* 1 = 0.000209186 loss)
+I0414 02:52:42.995522 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00190602 (* 1 = 0.00190602 loss)
+I0414 02:52:42.995540 12560 sgd_solver.cpp:105] Iteration 2350, lr = 6.25e-05
+I0414 02:53:00.774493 12560 solver.cpp:219] Iteration 2400 (2.81226 iter/s, 17.7793s/50 iters), loss = 0.0132326
+I0414 02:53:00.774761 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0120178 (* 1 = 0.0120178 loss)
+I0414 02:53:00.774803 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00121482 (* 1 = 0.00121482 loss)
+I0414 02:53:00.774827 12560 sgd_solver.cpp:105] Iteration 2400, lr = 6.25e-05
+I0414 02:53:18.552944 12560 solver.cpp:219] Iteration 2450 (2.81238 iter/s, 17.7785s/50 iters), loss = 0.00665964
+I0414 02:53:18.553021 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000836551 (* 1 = 0.000836551 loss)
+I0414 02:53:18.553043 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00582309 (* 1 = 0.00582309 loss)
+I0414 02:53:18.553061 12560 sgd_solver.cpp:105] Iteration 2450, lr = 6.25e-05
+I0414 02:53:36.333045 12560 solver.cpp:219] Iteration 2500 (2.8121 iter/s, 17.7803s/50 iters), loss = 0.051806
+I0414 02:53:36.333271 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00302023 (* 1 = 0.00302023 loss)
+I0414 02:53:36.333313 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0487858 (* 1 = 0.0487858 loss)
+I0414 02:53:36.333338 12560 sgd_solver.cpp:105] Iteration 2500, lr = 3.125e-05
+I0414 02:53:54.113030 12560 solver.cpp:219] Iteration 2550 (2.81213 iter/s, 17.7801s/50 iters), loss = 0.00427605
+I0414 02:53:54.113108 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00232379 (* 1 = 0.00232379 loss)
+I0414 02:53:54.113129 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00195226 (* 1 = 0.00195226 loss)
+I0414 02:53:54.113147 12560 sgd_solver.cpp:105] Iteration 2550, lr = 3.125e-05
+I0414 02:54:11.893370 12560 solver.cpp:219] Iteration 2600 (2.81206 iter/s, 17.7806s/50 iters), loss = 0.0103164
+I0414 02:54:11.893589 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00258645 (* 1 = 0.00258645 loss)
+I0414 02:54:11.893631 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00772992 (* 1 = 0.00772992 loss)
+I0414 02:54:11.893656 12560 sgd_solver.cpp:105] Iteration 2600, lr = 3.125e-05
+I0414 02:54:29.676003 12560 solver.cpp:219] Iteration 2650 (2.81171 iter/s, 17.7827s/50 iters), loss = 0.0035883
+I0414 02:54:29.676085 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00116587 (* 1 = 0.00116587 loss)
+I0414 02:54:29.676107 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00242242 (* 1 = 0.00242242 loss)
+I0414 02:54:29.676126 12560 sgd_solver.cpp:105] Iteration 2650, lr = 3.125e-05
+I0414 02:54:47.456571 12560 solver.cpp:219] Iteration 2700 (2.81202 iter/s, 17.7808s/50 iters), loss = 0.00409965
+I0414 02:54:47.456704 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0029197 (* 1 = 0.0029197 loss)
+I0414 02:54:47.456727 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00117995 (* 1 = 0.00117995 loss)
+I0414 02:54:47.456744 12560 sgd_solver.cpp:105] Iteration 2700, lr = 3.125e-05
+I0414 02:55:05.237413 12560 solver.cpp:219] Iteration 2750 (2.81199 iter/s, 17.781s/50 iters), loss = 0.00299975
+I0414 02:55:05.237504 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00163643 (* 1 = 0.00163643 loss)
+I0414 02:55:05.237524 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00136332 (* 1 = 0.00136332 loss)
+I0414 02:55:05.237545 12560 sgd_solver.cpp:105] Iteration 2750, lr = 3.125e-05
+I0414 02:55:23.017679 12560 solver.cpp:219] Iteration 2800 (2.81207 iter/s, 17.7805s/50 iters), loss = 0.0178836
+I0414 02:55:23.017894 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00789669 (* 1 = 0.00789669 loss)
+I0414 02:55:23.017933 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00998687 (* 1 = 0.00998687 loss)
+I0414 02:55:23.017957 12560 sgd_solver.cpp:105] Iteration 2800, lr = 3.125e-05
+I0414 02:55:40.798688 12560 solver.cpp:219] Iteration 2850 (2.81197 iter/s, 17.7811s/50 iters), loss = 0.00260145
+I0414 02:55:40.798780 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00155789 (* 1 = 0.00155789 loss)
+I0414 02:55:40.798802 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00104356 (* 1 = 0.00104356 loss)
+I0414 02:55:40.798818 12560 sgd_solver.cpp:105] Iteration 2850, lr = 3.125e-05
+I0414 02:55:58.576706 12560 solver.cpp:219] Iteration 2900 (2.81243 iter/s, 17.7782s/50 iters), loss = 0.00925506
+I0414 02:55:58.576863 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00555634 (* 1 = 0.00555634 loss)
+I0414 02:55:58.576884 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00369871 (* 1 = 0.00369871 loss)
+I0414 02:55:58.576901 12560 sgd_solver.cpp:105] Iteration 2900, lr = 3.125e-05
+I0414 02:56:16.359068 12560 solver.cpp:219] Iteration 2950 (2.81175 iter/s, 17.7825s/50 iters), loss = 0.00259018
+I0414 02:56:16.359148 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000240118 (* 1 = 0.000240118 loss)
+I0414 02:56:16.359169 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00235005 (* 1 = 0.00235005 loss)
+I0414 02:56:16.359186 12560 sgd_solver.cpp:105] Iteration 2950, lr = 3.125e-05
+I0414 02:56:33.657524 12560 solver.cpp:331] Iteration 3000, Testing net (#0)
+I0414 02:56:39.529449 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.95086 (* 1 = 1.95086 loss)
+I0414 02:56:39.529593 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.776563
+I0414 02:56:39.529707 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0626239 (* 1 = 0.0626239 loss)
+I0414 02:56:39.529723 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.972188
+I0414 02:56:39.832324 12560 solver.cpp:219] Iteration 3000 (2.13006 iter/s, 23.4736s/50 iters), loss = 0.00494556
+I0414 02:56:39.832376 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000552099 (* 1 = 0.000552099 loss)
+I0414 02:56:39.832397 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00439346 (* 1 = 0.00439346 loss)
+I0414 02:56:39.832417 12560 sgd_solver.cpp:105] Iteration 3000, lr = 1.5625e-05
+I0414 02:56:57.605468 12560 solver.cpp:219] Iteration 3050 (2.8132 iter/s, 17.7734s/50 iters), loss = 0.00220863
+I0414 02:56:57.605550 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000765913 (* 1 = 0.000765913 loss)
+I0414 02:56:57.605571 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00144272 (* 1 = 0.00144272 loss)
+I0414 02:56:57.605589 12560 sgd_solver.cpp:105] Iteration 3050, lr = 1.5625e-05
+I0414 02:57:15.386807 12560 solver.cpp:219] Iteration 3100 (2.8119 iter/s, 17.7816s/50 iters), loss = 0.00231081
+I0414 02:57:15.387037 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000770998 (* 1 = 0.000770998 loss)
+I0414 02:57:15.387080 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00153981 (* 1 = 0.00153981 loss)
+I0414 02:57:15.387104 12560 sgd_solver.cpp:105] Iteration 3100, lr = 1.5625e-05
+I0414 02:57:33.168357 12560 solver.cpp:219] Iteration 3150 (2.81189 iter/s, 17.7816s/50 iters), loss = 0.00276607
+I0414 02:57:33.168449 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000186487 (* 1 = 0.000186487 loss)
+I0414 02:57:33.168666 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00257958 (* 1 = 0.00257958 loss)
+I0414 02:57:33.168690 12560 sgd_solver.cpp:105] Iteration 3150, lr = 1.5625e-05
+I0414 02:57:50.955570 12560 solver.cpp:219] Iteration 3200 (2.81098 iter/s, 17.7874s/50 iters), loss = 0.0140728
+I0414 02:57:50.955816 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00562232 (* 1 = 0.00562232 loss)
+I0414 02:57:50.955859 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00845052 (* 1 = 0.00845052 loss)
+I0414 02:57:50.955883 12560 sgd_solver.cpp:105] Iteration 3200, lr = 1.5625e-05
+I0414 02:58:08.738811 12560 solver.cpp:219] Iteration 3250 (2.81162 iter/s, 17.7833s/50 iters), loss = 0.00196328
+I0414 02:58:08.738900 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000395542 (* 1 = 0.000395542 loss)
+I0414 02:58:08.738936 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00156774 (* 1 = 0.00156774 loss)
+I0414 02:58:08.738955 12560 sgd_solver.cpp:105] Iteration 3250, lr = 1.5625e-05
+I0414 02:58:26.521265 12560 solver.cpp:219] Iteration 3300 (2.81173 iter/s, 17.7827s/50 iters), loss = 0.00124937
+I0414 02:58:26.521528 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00076739 (* 1 = 0.00076739 loss)
+I0414 02:58:26.521569 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000481981 (* 1 = 0.000481981 loss)
+I0414 02:58:26.521592 12560 sgd_solver.cpp:105] Iteration 3300, lr = 1.5625e-05
+I0414 02:58:44.302428 12560 solver.cpp:219] Iteration 3350 (2.81195 iter/s, 17.7812s/50 iters), loss = 0.00074782
+I0414 02:58:44.302510 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000325938 (* 1 = 0.000325938 loss)
+I0414 02:58:44.302532 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000421887 (* 1 = 0.000421887 loss)
+I0414 02:58:44.302549 12560 sgd_solver.cpp:105] Iteration 3350, lr = 1.5625e-05
+I0414 02:59:02.083107 12560 solver.cpp:219] Iteration 3400 (2.81201 iter/s, 17.7809s/50 iters), loss = 0.00186238
+I0414 02:59:02.083237 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000415716 (* 1 = 0.000415716 loss)
+I0414 02:59:02.083258 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00144667 (* 1 = 0.00144667 loss)
+I0414 02:59:02.083276 12560 sgd_solver.cpp:105] Iteration 3400, lr = 1.5625e-05
+I0414 02:59:19.862782 12560 solver.cpp:219] Iteration 3450 (2.81217 iter/s, 17.7798s/50 iters), loss = 0.00742186
+I0414 02:59:19.862861 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0013291 (* 1 = 0.0013291 loss)
+I0414 02:59:19.862884 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00609277 (* 1 = 0.00609277 loss)
+I0414 02:59:19.862901 12560 sgd_solver.cpp:105] Iteration 3450, lr = 1.5625e-05
+I0414 02:59:37.642079 12560 solver.cpp:219] Iteration 3500 (2.81223 iter/s, 17.7795s/50 iters), loss = 0.00281054
+I0414 02:59:37.642307 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000468973 (* 1 = 0.000468973 loss)
+I0414 02:59:37.642349 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00234157 (* 1 = 0.00234157 loss)
+I0414 02:59:37.642371 12560 sgd_solver.cpp:105] Iteration 3500, lr = 7.8125e-06
+I0414 02:59:55.422876 12560 solver.cpp:219] Iteration 3550 (2.81201 iter/s, 17.7809s/50 iters), loss = 0.0141026
+I0414 02:59:55.422963 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000617916 (* 1 = 0.000617916 loss)
+I0414 02:59:55.423163 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0134847 (* 1 = 0.0134847 loss)
+I0414 02:59:55.423182 12560 sgd_solver.cpp:105] Iteration 3550, lr = 7.8125e-06
+I0414 03:00:13.205499 12560 solver.cpp:219] Iteration 3600 (2.8117 iter/s, 17.7828s/50 iters), loss = 0.000786609
+I0414 03:00:13.205716 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0003297 (* 1 = 0.0003297 loss)
+I0414 03:00:13.205760 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000456911 (* 1 = 0.000456911 loss)
+I0414 03:00:13.205785 12560 sgd_solver.cpp:105] Iteration 3600, lr = 7.8125e-06
+I0414 03:00:30.986369 12560 solver.cpp:219] Iteration 3650 (2.81199 iter/s, 17.781s/50 iters), loss = 0.00271735
+I0414 03:00:30.986455 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000355717 (* 1 = 0.000355717 loss)
+I0414 03:00:30.986663 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00236164 (* 1 = 0.00236164 loss)
+I0414 03:00:30.986686 12560 sgd_solver.cpp:105] Iteration 3650, lr = 7.8125e-06
+I0414 03:00:48.770010 12560 solver.cpp:219] Iteration 3700 (2.81154 iter/s, 17.7838s/50 iters), loss = 0.00140129
+I0414 03:00:48.770135 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000848348 (* 1 = 0.000848348 loss)
+I0414 03:00:48.770157 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000552941 (* 1 = 0.000552941 loss)
+I0414 03:00:48.770189 12560 sgd_solver.cpp:105] Iteration 3700, lr = 7.8125e-06
+I0414 03:01:06.549821 12560 solver.cpp:219] Iteration 3750 (2.81215 iter/s, 17.78s/50 iters), loss = 0.00445396
+I0414 03:01:06.549906 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00151436 (* 1 = 0.00151436 loss)
+I0414 03:01:06.549927 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00293961 (* 1 = 0.00293961 loss)
+I0414 03:01:06.549944 12560 sgd_solver.cpp:105] Iteration 3750, lr = 7.8125e-06
+I0414 03:01:24.328964 12560 solver.cpp:219] Iteration 3800 (2.81225 iter/s, 17.7793s/50 iters), loss = 0.00137135
+I0414 03:01:24.329236 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000386618 (* 1 = 0.000386618 loss)
+I0414 03:01:24.329277 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000984738 (* 1 = 0.000984738 loss)
+I0414 03:01:24.329301 12560 sgd_solver.cpp:105] Iteration 3800, lr = 7.8125e-06
+I0414 03:01:42.112471 12560 solver.cpp:219] Iteration 3850 (2.81159 iter/s, 17.7836s/50 iters), loss = 0.0121136
+I0414 03:01:42.112560 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 7.57047e-05 (* 1 = 7.57047e-05 loss)
+I0414 03:01:42.112581 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0120379 (* 1 = 0.0120379 loss)
+I0414 03:01:42.112599 12560 sgd_solver.cpp:105] Iteration 3850, lr = 7.8125e-06
+I0414 03:01:59.892650 12560 solver.cpp:219] Iteration 3900 (2.81209 iter/s, 17.7804s/50 iters), loss = 0.001529
+I0414 03:01:59.892879 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000394304 (* 1 = 0.000394304 loss)
+I0414 03:01:59.892920 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0011347 (* 1 = 0.0011347 loss)
+I0414 03:01:59.892945 12560 sgd_solver.cpp:105] Iteration 3900, lr = 7.8125e-06
+I0414 03:02:17.673024 12560 solver.cpp:219] Iteration 3950 (2.81208 iter/s, 17.7805s/50 iters), loss = 0.0203802
+I0414 03:02:17.673101 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 8.36171e-05 (* 1 = 8.36171e-05 loss)
+I0414 03:02:17.673122 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0202966 (* 1 = 0.0202966 loss)
+I0414 03:02:17.673141 12560 sgd_solver.cpp:105] Iteration 3950, lr = 7.8125e-06
+I0414 03:02:34.971468 12560 solver.cpp:331] Iteration 4000, Testing net (#0)
+I0414 03:02:40.842950 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.87092 (* 1 = 1.87092 loss)
+I0414 03:02:40.842989 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.777812
+I0414 03:02:40.843010 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0953404 (* 1 = 0.0953404 loss)
+I0414 03:02:40.843025 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.96125
+I0414 03:02:41.149382 12560 solver.cpp:219] Iteration 4000 (2.12977 iter/s, 23.4767s/50 iters), loss = 0.00199077
+I0414 03:02:41.149432 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000395377 (* 1 = 0.000395377 loss)
+I0414 03:02:41.149453 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0015954 (* 1 = 0.0015954 loss)
+I0414 03:02:41.149471 12560 sgd_solver.cpp:105] Iteration 4000, lr = 3.90625e-06
+I0414 03:02:58.923336 12560 solver.cpp:219] Iteration 4050 (2.81307 iter/s, 17.7742s/50 iters), loss = 0.00205825
+I0414 03:02:58.923418 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000196033 (* 1 = 0.000196033 loss)
+I0414 03:02:58.923439 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00186223 (* 1 = 0.00186223 loss)
+I0414 03:02:58.923455 12560 sgd_solver.cpp:105] Iteration 4050, lr = 3.90625e-06
+I0414 03:03:16.705612 12560 solver.cpp:219] Iteration 4100 (2.81176 iter/s, 17.7825s/50 iters), loss = 0.00154289
+I0414 03:03:16.705837 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000866002 (* 1 = 0.000866002 loss)
+I0414 03:03:16.705881 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000676897 (* 1 = 0.000676897 loss)
+I0414 03:03:16.705904 12560 sgd_solver.cpp:105] Iteration 4100, lr = 3.90625e-06
+I0414 03:03:34.486569 12560 solver.cpp:219] Iteration 4150 (2.81198 iter/s, 17.7811s/50 iters), loss = 0.0023394
+I0414 03:03:34.486650 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00138159 (* 1 = 0.00138159 loss)
+I0414 03:03:34.486671 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000957814 (* 1 = 0.000957814 loss)
+I0414 03:03:34.486690 12560 sgd_solver.cpp:105] Iteration 4150, lr = 3.90625e-06
+I0414 03:03:52.267448 12560 solver.cpp:219] Iteration 4200 (2.81198 iter/s, 17.7811s/50 iters), loss = 0.00243995
+I0414 03:03:52.267756 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00146668 (* 1 = 0.00146668 loss)
+I0414 03:03:52.267799 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000973272 (* 1 = 0.000973272 loss)
+I0414 03:03:52.267823 12560 sgd_solver.cpp:105] Iteration 4200, lr = 3.90625e-06
+I0414 03:04:10.049119 12560 solver.cpp:219] Iteration 4250 (2.81188 iter/s, 17.7817s/50 iters), loss = 0.00648691
+I0414 03:04:10.049199 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00133725 (* 1 = 0.00133725 loss)
+I0414 03:04:10.049221 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00514967 (* 1 = 0.00514967 loss)
+I0414 03:04:10.049239 12560 sgd_solver.cpp:105] Iteration 4250, lr = 3.90625e-06
+I0414 03:04:27.829013 12560 solver.cpp:219] Iteration 4300 (2.81213 iter/s, 17.7801s/50 iters), loss = 0.00194209
+I0414 03:04:27.829231 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00048998 (* 1 = 0.00048998 loss)
+I0414 03:04:27.829273 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00145212 (* 1 = 0.00145212 loss)
+I0414 03:04:27.829296 12560 sgd_solver.cpp:105] Iteration 4300, lr = 3.90625e-06
+I0414 03:04:45.608826 12560 solver.cpp:219] Iteration 4350 (2.81216 iter/s, 17.7799s/50 iters), loss = 0.00205633
+I0414 03:04:45.608907 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0011793 (* 1 = 0.0011793 loss)
+I0414 03:04:45.608929 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00087704 (* 1 = 0.00087704 loss)
+I0414 03:04:45.608947 12560 sgd_solver.cpp:105] Iteration 4350, lr = 3.90625e-06
+I0414 03:05:03.390321 12560 solver.cpp:219] Iteration 4400 (2.81188 iter/s, 17.7817s/50 iters), loss = 0.00187096
+I0414 03:05:03.390483 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000296497 (* 1 = 0.000296497 loss)
+I0414 03:05:03.390506 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00157447 (* 1 = 0.00157447 loss)
+I0414 03:05:03.390522 12560 sgd_solver.cpp:105] Iteration 4400, lr = 3.90625e-06
+I0414 03:05:21.170116 12560 solver.cpp:219] Iteration 4450 (2.81216 iter/s, 17.7799s/50 iters), loss = 0.00182606
+I0414 03:05:21.170191 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000380021 (* 1 = 0.000380021 loss)
+I0414 03:05:21.170212 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00144605 (* 1 = 0.00144605 loss)
+I0414 03:05:21.170229 12560 sgd_solver.cpp:105] Iteration 4450, lr = 3.90625e-06
+I0414 03:05:38.950976 12560 solver.cpp:219] Iteration 4500 (2.81198 iter/s, 17.7811s/50 iters), loss = 0.00131152
+I0414 03:05:38.951105 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00028711 (* 1 = 0.00028711 loss)
+I0414 03:05:38.951126 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00102441 (* 1 = 0.00102441 loss)
+I0414 03:05:38.951144 12560 sgd_solver.cpp:105] Iteration 4500, lr = 1.95313e-06
+I0414 03:05:56.729370 12560 solver.cpp:219] Iteration 4550 (2.81238 iter/s, 17.7786s/50 iters), loss = 0.00205054
+I0414 03:05:56.729442 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000187976 (* 1 = 0.000187976 loss)
+I0414 03:05:56.729465 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00186257 (* 1 = 0.00186257 loss)
+I0414 03:05:56.729481 12560 sgd_solver.cpp:105] Iteration 4550, lr = 1.95313e-06
+I0414 03:06:14.507742 12560 solver.cpp:219] Iteration 4600 (2.81238 iter/s, 17.7786s/50 iters), loss = 0.00305166
+I0414 03:06:14.508064 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000410259 (* 1 = 0.000410259 loss)
+I0414 03:06:14.508123 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00264141 (* 1 = 0.00264141 loss)
+I0414 03:06:14.508148 12560 sgd_solver.cpp:105] Iteration 4600, lr = 1.95313e-06
+I0414 03:06:32.288635 12560 solver.cpp:219] Iteration 4650 (2.81201 iter/s, 17.7809s/50 iters), loss = 0.0063638
+I0414 03:06:32.288714 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000338968 (* 1 = 0.000338968 loss)
+I0414 03:06:32.288735 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00602484 (* 1 = 0.00602484 loss)
+I0414 03:06:32.288753 12560 sgd_solver.cpp:105] Iteration 4650, lr = 1.95313e-06
+I0414 03:06:50.069034 12560 solver.cpp:219] Iteration 4700 (2.81205 iter/s, 17.7806s/50 iters), loss = 0.00831982
+I0414 03:06:50.070369 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00206347 (* 1 = 0.00206347 loss)
+I0414 03:06:50.070399 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00625635 (* 1 = 0.00625635 loss)
+I0414 03:06:50.070417 12560 sgd_solver.cpp:105] Iteration 4700, lr = 1.95313e-06
+I0414 03:07:07.853698 12560 solver.cpp:219] Iteration 4750 (2.81157 iter/s, 17.7836s/50 iters), loss = 0.00306776
+I0414 03:07:07.853790 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000908904 (* 1 = 0.000908904 loss)
+I0414 03:07:07.853811 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00215885 (* 1 = 0.00215885 loss)
+I0414 03:07:07.853830 12560 sgd_solver.cpp:105] Iteration 4750, lr = 1.95313e-06
+I0414 03:07:25.635289 12560 solver.cpp:219] Iteration 4800 (2.81187 iter/s, 17.7818s/50 iters), loss = 0.0022646
+I0414 03:07:25.635520 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00172651 (* 1 = 0.00172651 loss)
+I0414 03:07:25.635561 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000538085 (* 1 = 0.000538085 loss)
+I0414 03:07:25.635586 12560 sgd_solver.cpp:105] Iteration 4800, lr = 1.95313e-06
+I0414 03:07:43.417022 12560 solver.cpp:219] Iteration 4850 (2.81186 iter/s, 17.7818s/50 iters), loss = 0.0120041
+I0414 03:07:43.417105 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0113767 (* 1 = 0.0113767 loss)
+I0414 03:07:43.417126 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00062744 (* 1 = 0.00062744 loss)
+I0414 03:07:43.417146 12560 sgd_solver.cpp:105] Iteration 4850, lr = 1.95313e-06
+I0414 03:08:01.198261 12560 solver.cpp:219] Iteration 4900 (2.81192 iter/s, 17.7814s/50 iters), loss = 0.0106522
+I0414 03:08:01.198381 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000103583 (* 1 = 0.000103583 loss)
+I0414 03:08:01.198403 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0105486 (* 1 = 0.0105486 loss)
+I0414 03:08:01.198421 12560 sgd_solver.cpp:105] Iteration 4900, lr = 1.95313e-06
+I0414 03:08:18.977548 12560 solver.cpp:219] Iteration 4950 (2.81223 iter/s, 17.7795s/50 iters), loss = 0.00314832
+I0414 03:08:18.977622 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000187348 (* 1 = 0.000187348 loss)
+I0414 03:08:18.977643 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00296097 (* 1 = 0.00296097 loss)
+I0414 03:08:18.977660 12560 sgd_solver.cpp:105] Iteration 4950, lr = 1.95313e-06
+I0414 03:08:36.272997 12560 solver.cpp:331] Iteration 5000, Testing net (#0)
+I0414 03:08:42.144080 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.88703 (* 1 = 1.88703 loss)
+I0414 03:08:42.144134 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.77375
+I0414 03:08:42.144155 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0788419 (* 1 = 0.0788419 loss)
+I0414 03:08:42.144170 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.960625
+I0414 03:08:42.447088 12560 solver.cpp:219] Iteration 5000 (2.13039 iter/s, 23.4698s/50 iters), loss = 0.00216227
+I0414 03:08:42.447147 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000677141 (* 1 = 0.000677141 loss)
+I0414 03:08:42.447181 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00148513 (* 1 = 0.00148513 loss)
+I0414 03:08:42.447199 12560 sgd_solver.cpp:105] Iteration 5000, lr = 9.76563e-07
+I0414 03:09:00.223387 12560 solver.cpp:219] Iteration 5050 (2.81272 iter/s, 17.7764s/50 iters), loss = 0.00416812
+I0414 03:09:00.223490 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00106936 (* 1 = 0.00106936 loss)
+I0414 03:09:00.223512 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00309876 (* 1 = 0.00309876 loss)
+I0414 03:09:00.223531 12560 sgd_solver.cpp:105] Iteration 5050, lr = 9.76563e-07
+I0414 03:09:18.007999 12560 solver.cpp:219] Iteration 5100 (2.81142 iter/s, 17.7846s/50 iters), loss = 0.00842266
+I0414 03:09:18.008270 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000236722 (* 1 = 0.000236722 loss)
+I0414 03:09:18.008313 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00818594 (* 1 = 0.00818594 loss)
+I0414 03:09:18.008337 12560 sgd_solver.cpp:105] Iteration 5100, lr = 9.76563e-07
+I0414 03:09:35.789211 12560 solver.cpp:219] Iteration 5150 (2.81198 iter/s, 17.7811s/50 iters), loss = 0.000704009
+I0414 03:09:35.789294 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000317781 (* 1 = 0.000317781 loss)
+I0414 03:09:35.789315 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000386227 (* 1 = 0.000386227 loss)
+I0414 03:09:35.789332 12560 sgd_solver.cpp:105] Iteration 5150, lr = 9.76563e-07
+I0414 03:09:53.568744 12560 solver.cpp:219] Iteration 5200 (2.81222 iter/s, 17.7796s/50 iters), loss = 0.00777296
+I0414 03:09:53.568872 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00619944 (* 1 = 0.00619944 loss)
+I0414 03:09:53.568894 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00157353 (* 1 = 0.00157353 loss)
+I0414 03:09:53.568914 12560 sgd_solver.cpp:105] Iteration 5200, lr = 9.76563e-07
+I0414 03:10:11.350105 12560 solver.cpp:219] Iteration 5250 (2.81194 iter/s, 17.7813s/50 iters), loss = 0.00683859
+I0414 03:10:11.350183 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00186878 (* 1 = 0.00186878 loss)
+I0414 03:10:11.350205 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00496982 (* 1 = 0.00496982 loss)
+I0414 03:10:11.350222 12560 sgd_solver.cpp:105] Iteration 5250, lr = 9.76563e-07
+I0414 03:10:29.129853 12560 solver.cpp:219] Iteration 5300 (2.81218 iter/s, 17.7798s/50 iters), loss = 0.00697737
+I0414 03:10:29.129972 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00084186 (* 1 = 0.00084186 loss)
+I0414 03:10:29.129994 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00613551 (* 1 = 0.00613551 loss)
+I0414 03:10:29.130012 12560 sgd_solver.cpp:105] Iteration 5300, lr = 9.76563e-07
+I0414 03:10:46.910881 12560 solver.cpp:219] Iteration 5350 (2.81198 iter/s, 17.781s/50 iters), loss = 0.00274907
+I0414 03:10:46.910953 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000402252 (* 1 = 0.000402252 loss)
+I0414 03:10:46.910974 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00234682 (* 1 = 0.00234682 loss)
+I0414 03:10:46.910990 12560 sgd_solver.cpp:105] Iteration 5350, lr = 9.76563e-07
+I0414 03:11:04.690850 12560 solver.cpp:219] Iteration 5400 (2.81214 iter/s, 17.78s/50 iters), loss = 0.00591406
+I0414 03:11:04.690942 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00469294 (* 1 = 0.00469294 loss)
+I0414 03:11:04.690963 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00122113 (* 1 = 0.00122113 loss)
+I0414 03:11:04.690980 12560 sgd_solver.cpp:105] Iteration 5400, lr = 9.76563e-07
+I0414 03:11:22.470602 12560 solver.cpp:219] Iteration 5450 (2.81218 iter/s, 17.7798s/50 iters), loss = 0.00203801
+I0414 03:11:22.470675 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000927546 (* 1 = 0.000927546 loss)
+I0414 03:11:22.470697 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00111047 (* 1 = 0.00111047 loss)
+I0414 03:11:22.470726 12560 sgd_solver.cpp:105] Iteration 5450, lr = 9.76563e-07
+I0414 03:11:40.251636 12560 solver.cpp:219] Iteration 5500 (2.81197 iter/s, 17.7811s/50 iters), loss = 0.0560629
+I0414 03:11:40.251801 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0554637 (* 1 = 0.0554637 loss)
+I0414 03:11:40.251821 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000599149 (* 1 = 0.000599149 loss)
+I0414 03:11:40.251839 12560 sgd_solver.cpp:105] Iteration 5500, lr = 4.88281e-07
+I0414 03:11:58.031100 12560 solver.cpp:219] Iteration 5550 (2.81224 iter/s, 17.7794s/50 iters), loss = 0.00700008
+I0414 03:11:58.031167 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00085241 (* 1 = 0.00085241 loss)
+I0414 03:11:58.031188 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00614768 (* 1 = 0.00614768 loss)
+I0414 03:11:58.031204 12560 sgd_solver.cpp:105] Iteration 5550, lr = 4.88281e-07
+I0414 03:12:15.814358 12560 solver.cpp:219] Iteration 5600 (2.81162 iter/s, 17.7833s/50 iters), loss = 0.00279646
+I0414 03:12:15.814602 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000398582 (* 1 = 0.000398582 loss)
+I0414 03:12:15.814642 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00239788 (* 1 = 0.00239788 loss)
+I0414 03:12:15.814666 12560 sgd_solver.cpp:105] Iteration 5600, lr = 4.88281e-07
+I0414 03:12:33.598245 12560 solver.cpp:219] Iteration 5650 (2.81154 iter/s, 17.7838s/50 iters), loss = 0.00271947
+I0414 03:12:33.598328 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000122788 (* 1 = 0.000122788 loss)
+I0414 03:12:33.598350 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0025967 (* 1 = 0.0025967 loss)
+I0414 03:12:33.598368 12560 sgd_solver.cpp:105] Iteration 5650, lr = 4.88281e-07
+I0414 03:12:51.381873 12560 solver.cpp:219] Iteration 5700 (2.81156 iter/s, 17.7837s/50 iters), loss = 0.00230177
+I0414 03:12:51.382093 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000852075 (* 1 = 0.000852075 loss)
+I0414 03:12:51.382135 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00144971 (* 1 = 0.00144971 loss)
+I0414 03:12:51.382159 12560 sgd_solver.cpp:105] Iteration 5700, lr = 4.88281e-07
+I0414 03:13:09.165207 12560 solver.cpp:219] Iteration 5750 (2.81163 iter/s, 17.7833s/50 iters), loss = 0.00586342
+I0414 03:13:09.165290 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00234017 (* 1 = 0.00234017 loss)
+I0414 03:13:09.165490 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00352325 (* 1 = 0.00352325 loss)
+I0414 03:13:09.165513 12560 sgd_solver.cpp:105] Iteration 5750, lr = 4.88281e-07
+I0414 03:13:26.944425 12560 solver.cpp:219] Iteration 5800 (2.81226 iter/s, 17.7793s/50 iters), loss = 0.00266395
+I0414 03:13:26.944649 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000704547 (* 1 = 0.000704547 loss)
+I0414 03:13:26.944694 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00195941 (* 1 = 0.00195941 loss)
+I0414 03:13:26.944716 12560 sgd_solver.cpp:105] Iteration 5800, lr = 4.88281e-07
+I0414 03:13:44.726321 12560 solver.cpp:219] Iteration 5850 (2.81185 iter/s, 17.7819s/50 iters), loss = 0.0183074
+I0414 03:13:44.726405 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00451313 (* 1 = 0.00451313 loss)
+I0414 03:13:44.726426 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0137943 (* 1 = 0.0137943 loss)
+I0414 03:13:44.726444 12560 sgd_solver.cpp:105] Iteration 5850, lr = 4.88281e-07
+I0414 03:14:02.510596 12560 solver.cpp:219] Iteration 5900 (2.81146 iter/s, 17.7844s/50 iters), loss = 0.000939679
+I0414 03:14:02.510819 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000105844 (* 1 = 0.000105844 loss)
+I0414 03:14:02.510861 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000833838 (* 1 = 0.000833838 loss)
+I0414 03:14:02.510885 12560 sgd_solver.cpp:105] Iteration 5900, lr = 4.88281e-07
+I0414 03:14:20.290030 12560 solver.cpp:219] Iteration 5950 (2.81224 iter/s, 17.7794s/50 iters), loss = 0.00119595
+I0414 03:14:20.290105 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000446581 (* 1 = 0.000446581 loss)
+I0414 03:14:20.290127 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000749373 (* 1 = 0.000749373 loss)
+I0414 03:14:20.290144 12560 sgd_solver.cpp:105] Iteration 5950, lr = 4.88281e-07
+I0414 03:14:37.588721 12560 solver.cpp:331] Iteration 6000, Testing net (#0)
+I0414 03:14:43.457859 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.88067 (* 1 = 1.88067 loss)
+I0414 03:14:43.457908 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.778125
+I0414 03:14:43.457929 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0677917 (* 1 = 0.0677917 loss)
+I0414 03:14:43.457944 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.966875
+I0414 03:14:43.761291 12560 solver.cpp:219] Iteration 6000 (2.13025 iter/s, 23.4714s/50 iters), loss = 0.00690748
+I0414 03:14:43.761342 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00632621 (* 1 = 0.00632621 loss)
+I0414 03:14:43.761361 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000581274 (* 1 = 0.000581274 loss)
+I0414 03:14:43.761380 12560 sgd_solver.cpp:105] Iteration 6000, lr = 2.44141e-07
+I0414 03:15:01.535261 12560 solver.cpp:219] Iteration 6050 (2.81308 iter/s, 17.7741s/50 iters), loss = 0.00465922
+I0414 03:15:01.535332 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00300412 (* 1 = 0.00300412 loss)
+I0414 03:15:01.535354 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00165511 (* 1 = 0.00165511 loss)
+I0414 03:15:01.535372 12560 sgd_solver.cpp:105] Iteration 6050, lr = 2.44141e-07
+I0414 03:15:19.314800 12560 solver.cpp:219] Iteration 6100 (2.8122 iter/s, 17.7796s/50 iters), loss = 0.00162676
+I0414 03:15:19.315038 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000395049 (* 1 = 0.000395049 loss)
+I0414 03:15:19.315081 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00123171 (* 1 = 0.00123171 loss)
+I0414 03:15:19.315105 12560 sgd_solver.cpp:105] Iteration 6100, lr = 2.44141e-07
+I0414 03:15:37.098592 12560 solver.cpp:219] Iteration 6150 (2.81155 iter/s, 17.7838s/50 iters), loss = 0.00607418
+I0414 03:15:37.098690 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00495626 (* 1 = 0.00495626 loss)
+I0414 03:15:37.098712 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00111793 (* 1 = 0.00111793 loss)
+I0414 03:15:37.098732 12560 sgd_solver.cpp:105] Iteration 6150, lr = 2.44141e-07
+I0414 03:15:54.880178 12560 solver.cpp:219] Iteration 6200 (2.81188 iter/s, 17.7817s/50 iters), loss = 0.0275595
+I0414 03:15:54.880313 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000373761 (* 1 = 0.000373761 loss)
+I0414 03:15:54.880336 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0271857 (* 1 = 0.0271857 loss)
+I0414 03:15:54.880352 12560 sgd_solver.cpp:105] Iteration 6200, lr = 2.44141e-07
+I0414 03:16:12.660359 12560 solver.cpp:219] Iteration 6250 (2.81211 iter/s, 17.7802s/50 iters), loss = 0.00152658
+I0414 03:16:12.660434 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000565632 (* 1 = 0.000565632 loss)
+I0414 03:16:12.660455 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000960952 (* 1 = 0.000960952 loss)
+I0414 03:16:12.660473 12560 sgd_solver.cpp:105] Iteration 6250, lr = 2.44141e-07
+I0414 03:16:30.442317 12560 solver.cpp:219] Iteration 6300 (2.81182 iter/s, 17.7821s/50 iters), loss = 0.00459326
+I0414 03:16:30.442545 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00300873 (* 1 = 0.00300873 loss)
+I0414 03:16:30.442587 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00158453 (* 1 = 0.00158453 loss)
+I0414 03:16:30.442610 12560 sgd_solver.cpp:105] Iteration 6300, lr = 2.44141e-07
+I0414 03:16:48.223168 12560 solver.cpp:219] Iteration 6350 (2.81201 iter/s, 17.7808s/50 iters), loss = 0.00244325
+I0414 03:16:48.223258 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000375896 (* 1 = 0.000375896 loss)
+I0414 03:16:48.223279 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00206736 (* 1 = 0.00206736 loss)
+I0414 03:16:48.223296 12560 sgd_solver.cpp:105] Iteration 6350, lr = 2.44141e-07
+I0414 03:17:06.004448 12560 solver.cpp:219] Iteration 6400 (2.81193 iter/s, 17.7814s/50 iters), loss = 0.00365185
+I0414 03:17:06.004711 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00039585 (* 1 = 0.00039585 loss)
+I0414 03:17:06.004755 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.003256 (* 1 = 0.003256 loss)
+I0414 03:17:06.004777 12560 sgd_solver.cpp:105] Iteration 6400, lr = 2.44141e-07
+I0414 03:17:23.786692 12560 solver.cpp:219] Iteration 6450 (2.8118 iter/s, 17.7822s/50 iters), loss = 0.00687604
+I0414 03:17:23.786779 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00610632 (* 1 = 0.00610632 loss)
+I0414 03:17:23.786801 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000769719 (* 1 = 0.000769719 loss)
+I0414 03:17:23.786820 12560 sgd_solver.cpp:105] Iteration 6450, lr = 2.44141e-07
+I0414 03:17:41.568153 12560 solver.cpp:219] Iteration 6500 (2.8119 iter/s, 17.7816s/50 iters), loss = 0.0191615
+I0414 03:17:41.568380 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000182177 (* 1 = 0.000182177 loss)
+I0414 03:17:41.568423 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0189793 (* 1 = 0.0189793 loss)
+I0414 03:17:41.568447 12560 sgd_solver.cpp:105] Iteration 6500, lr = 1.2207e-07
+I0414 03:17:59.350930 12560 solver.cpp:219] Iteration 6550 (2.81171 iter/s, 17.7828s/50 iters), loss = 0.00627466
+I0414 03:17:59.351011 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00414678 (* 1 = 0.00414678 loss)
+I0414 03:17:59.351032 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00212789 (* 1 = 0.00212789 loss)
+I0414 03:17:59.351052 12560 sgd_solver.cpp:105] Iteration 6550, lr = 1.2207e-07
+I0414 03:18:17.134840 12560 solver.cpp:219] Iteration 6600 (2.81151 iter/s, 17.784s/50 iters), loss = 0.00248601
+I0414 03:18:17.135074 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000475062 (* 1 = 0.000475062 loss)
+I0414 03:18:17.135118 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00201095 (* 1 = 0.00201095 loss)
+I0414 03:18:17.135141 12560 sgd_solver.cpp:105] Iteration 6600, lr = 1.2207e-07
+I0414 03:18:34.916327 12560 solver.cpp:219] Iteration 6650 (2.81191 iter/s, 17.7815s/50 iters), loss = 0.00314571
+I0414 03:18:34.916415 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000865056 (* 1 = 0.000865056 loss)
+I0414 03:18:34.916437 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00228065 (* 1 = 0.00228065 loss)
+I0414 03:18:34.916456 12560 sgd_solver.cpp:105] Iteration 6650, lr = 1.2207e-07
+I0414 03:18:52.700135 12560 solver.cpp:219] Iteration 6700 (2.81153 iter/s, 17.7839s/50 iters), loss = 0.00208623
+I0414 03:18:52.700350 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000160269 (* 1 = 0.000160269 loss)
+I0414 03:18:52.700392 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00192597 (* 1 = 0.00192597 loss)
+I0414 03:18:52.700415 12560 sgd_solver.cpp:105] Iteration 6700, lr = 1.2207e-07
+I0414 03:19:10.480814 12560 solver.cpp:219] Iteration 6750 (2.81204 iter/s, 17.7807s/50 iters), loss = 0.00926273
+I0414 03:19:10.480886 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000489353 (* 1 = 0.000489353 loss)
+I0414 03:19:10.480908 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00877338 (* 1 = 0.00877338 loss)
+I0414 03:19:10.480926 12560 sgd_solver.cpp:105] Iteration 6750, lr = 1.2207e-07
+I0414 03:19:28.260386 12560 solver.cpp:219] Iteration 6800 (2.81219 iter/s, 17.7797s/50 iters), loss = 0.00293888
+I0414 03:19:28.260545 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000807978 (* 1 = 0.000807978 loss)
+I0414 03:19:28.260573 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0021309 (* 1 = 0.0021309 loss)
+I0414 03:19:28.260591 12560 sgd_solver.cpp:105] Iteration 6800, lr = 1.2207e-07
+I0414 03:19:46.039389 12560 solver.cpp:219] Iteration 6850 (2.8123 iter/s, 17.7791s/50 iters), loss = 0.00525413
+I0414 03:19:46.039475 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000606115 (* 1 = 0.000606115 loss)
+I0414 03:19:46.039496 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00464802 (* 1 = 0.00464802 loss)
+I0414 03:19:46.039515 12560 sgd_solver.cpp:105] Iteration 6850, lr = 1.2207e-07
+I0414 03:20:03.821324 12560 solver.cpp:219] Iteration 6900 (2.81182 iter/s, 17.7821s/50 iters), loss = 0.0414364
+I0414 03:20:03.821471 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000486538 (* 1 = 0.000486538 loss)
+I0414 03:20:03.821492 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0409499 (* 1 = 0.0409499 loss)
+I0414 03:20:03.821511 12560 sgd_solver.cpp:105] Iteration 6900, lr = 1.2207e-07
+I0414 03:20:21.602597 12560 solver.cpp:219] Iteration 6950 (2.81194 iter/s, 17.7813s/50 iters), loss = 0.00229536
+I0414 03:20:21.602674 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000493935 (* 1 = 0.000493935 loss)
+I0414 03:20:21.602694 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00180143 (* 1 = 0.00180143 loss)
+I0414 03:20:21.602712 12560 sgd_solver.cpp:105] Iteration 6950, lr = 1.2207e-07
+I0414 03:20:38.900279 12560 solver.cpp:331] Iteration 7000, Testing net (#0)
+I0414 03:20:44.770120 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.9065 (* 1 = 1.9065 loss)
+I0414 03:20:44.770174 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.782812
+I0414 03:20:44.770195 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.069572 (* 1 = 0.069572 loss)
+I0414 03:20:44.770210 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.967188
+I0414 03:20:45.073092 12560 solver.cpp:219] Iteration 7000 (2.13032 iter/s, 23.4707s/50 iters), loss = 0.00155909
+I0414 03:20:45.073148 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000302193 (* 1 = 0.000302193 loss)
+I0414 03:20:45.073170 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00125691 (* 1 = 0.00125691 loss)
+I0414 03:20:45.073189 12560 sgd_solver.cpp:105] Iteration 7000, lr = 6.10352e-08
+I0414 03:21:02.847045 12560 solver.cpp:219] Iteration 7050 (2.81308 iter/s, 17.7741s/50 iters), loss = 0.0151553
+I0414 03:21:02.847128 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00103948 (* 1 = 0.00103948 loss)
+I0414 03:21:02.847149 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0141159 (* 1 = 0.0141159 loss)
+I0414 03:21:02.847167 12560 sgd_solver.cpp:105] Iteration 7050, lr = 6.10352e-08
+I0414 03:21:20.629662 12560 solver.cpp:219] Iteration 7100 (2.81171 iter/s, 17.7827s/50 iters), loss = 0.00133419
+I0414 03:21:20.629784 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000207556 (* 1 = 0.000207556 loss)
+I0414 03:21:20.629806 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00112665 (* 1 = 0.00112665 loss)
+I0414 03:21:20.629825 12560 sgd_solver.cpp:105] Iteration 7100, lr = 6.10352e-08
+I0414 03:21:38.409780 12560 solver.cpp:219] Iteration 7150 (2.81211 iter/s, 17.7802s/50 iters), loss = 0.00254319
+I0414 03:21:38.409865 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000325257 (* 1 = 0.000325257 loss)
+I0414 03:21:38.409886 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00221795 (* 1 = 0.00221795 loss)
+I0414 03:21:38.409904 12560 sgd_solver.cpp:105] Iteration 7150, lr = 6.10352e-08
+I0414 03:21:56.189466 12560 solver.cpp:219] Iteration 7200 (2.81218 iter/s, 17.7798s/50 iters), loss = 0.00243448
+I0414 03:21:56.189726 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00165642 (* 1 = 0.00165642 loss)
+I0414 03:21:56.189769 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000778084 (* 1 = 0.000778084 loss)
+I0414 03:21:56.189805 12560 sgd_solver.cpp:105] Iteration 7200, lr = 6.10352e-08
+I0414 03:22:13.972374 12560 solver.cpp:219] Iteration 7250 (2.81169 iter/s, 17.7829s/50 iters), loss = 0.00468252
+I0414 03:22:13.972453 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00147532 (* 1 = 0.00147532 loss)
+I0414 03:22:13.972474 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00320722 (* 1 = 0.00320722 loss)
+I0414 03:22:13.972492 12560 sgd_solver.cpp:105] Iteration 7250, lr = 6.10352e-08
+I0414 03:22:31.757608 12560 solver.cpp:219] Iteration 7300 (2.8113 iter/s, 17.7854s/50 iters), loss = 0.00189079
+I0414 03:22:31.757741 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000601551 (* 1 = 0.000601551 loss)
+I0414 03:22:31.757763 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00128926 (* 1 = 0.00128926 loss)
+I0414 03:22:31.757782 12560 sgd_solver.cpp:105] Iteration 7300, lr = 6.10352e-08
+I0414 03:22:49.536423 12560 solver.cpp:219] Iteration 7350 (2.81232 iter/s, 17.7789s/50 iters), loss = 0.00118937
+I0414 03:22:49.536504 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000541873 (* 1 = 0.000541873 loss)
+I0414 03:22:49.536526 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000647517 (* 1 = 0.000647517 loss)
+I0414 03:22:49.536545 12560 sgd_solver.cpp:105] Iteration 7350, lr = 6.10352e-08
+I0414 03:23:07.316435 12560 solver.cpp:219] Iteration 7400 (2.81212 iter/s, 17.7802s/50 iters), loss = 0.00167686
+I0414 03:23:07.316661 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000212433 (* 1 = 0.000212433 loss)
+I0414 03:23:07.316705 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00146445 (* 1 = 0.00146445 loss)
+I0414 03:23:07.316730 12560 sgd_solver.cpp:105] Iteration 7400, lr = 6.10352e-08
+I0414 03:23:25.099047 12560 solver.cpp:219] Iteration 7450 (2.81173 iter/s, 17.7826s/50 iters), loss = 0.00135377
+I0414 03:23:25.099131 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000132133 (* 1 = 0.000132133 loss)
+I0414 03:23:25.099153 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00122166 (* 1 = 0.00122166 loss)
+I0414 03:23:25.099171 12560 sgd_solver.cpp:105] Iteration 7450, lr = 6.10352e-08
+I0414 03:23:42.880095 12560 solver.cpp:219] Iteration 7500 (2.81196 iter/s, 17.7812s/50 iters), loss = 0.00597255
+I0414 03:23:42.880323 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00204344 (* 1 = 0.00204344 loss)
+I0414 03:23:42.880365 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00392913 (* 1 = 0.00392913 loss)
+I0414 03:23:42.880388 12560 sgd_solver.cpp:105] Iteration 7500, lr = 3.05176e-08
+I0414 03:24:00.663707 12560 solver.cpp:219] Iteration 7550 (2.81157 iter/s, 17.7836s/50 iters), loss = 0.00219782
+I0414 03:24:00.663816 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000450263 (* 1 = 0.000450263 loss)
+I0414 03:24:00.663838 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00174758 (* 1 = 0.00174758 loss)
+I0414 03:24:00.663857 12560 sgd_solver.cpp:105] Iteration 7550, lr = 3.05176e-08
+I0414 03:24:18.447278 12560 solver.cpp:219] Iteration 7600 (2.81157 iter/s, 17.7837s/50 iters), loss = 0.000780719
+I0414 03:24:18.447496 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000431233 (* 1 = 0.000431233 loss)
+I0414 03:24:18.447538 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000349509 (* 1 = 0.000349509 loss)
+I0414 03:24:18.447562 12560 sgd_solver.cpp:105] Iteration 7600, lr = 3.05176e-08
+I0414 03:24:36.226644 12560 solver.cpp:219] Iteration 7650 (2.81224 iter/s, 17.7794s/50 iters), loss = 0.00646743
+I0414 03:24:36.226721 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00557242 (* 1 = 0.00557242 loss)
+I0414 03:24:36.226742 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000895038 (* 1 = 0.000895038 loss)
+I0414 03:24:36.226771 12560 sgd_solver.cpp:105] Iteration 7650, lr = 3.05176e-08
+I0414 03:24:54.007764 12560 solver.cpp:219] Iteration 7700 (2.81195 iter/s, 17.7813s/50 iters), loss = 0.0034132
+I0414 03:24:54.007931 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00233347 (* 1 = 0.00233347 loss)
+I0414 03:24:54.007953 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00107975 (* 1 = 0.00107975 loss)
+I0414 03:24:54.007971 12560 sgd_solver.cpp:105] Iteration 7700, lr = 3.05176e-08
+I0414 03:25:11.788733 12560 solver.cpp:219] Iteration 7750 (2.81199 iter/s, 17.781s/50 iters), loss = 0.00131287
+I0414 03:25:11.788808 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000521548 (* 1 = 0.000521548 loss)
+I0414 03:25:11.788830 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000791345 (* 1 = 0.000791345 loss)
+I0414 03:25:11.788847 12560 sgd_solver.cpp:105] Iteration 7750, lr = 3.05176e-08
+I0414 03:25:29.568938 12560 solver.cpp:219] Iteration 7800 (2.81209 iter/s, 17.7804s/50 iters), loss = 0.00264627
+I0414 03:25:29.569169 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00103993 (* 1 = 0.00103993 loss)
+I0414 03:25:29.569213 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00160636 (* 1 = 0.00160636 loss)
+I0414 03:25:29.569236 12560 sgd_solver.cpp:105] Iteration 7800, lr = 3.05176e-08
+I0414 03:25:47.352704 12560 solver.cpp:219] Iteration 7850 (2.81155 iter/s, 17.7838s/50 iters), loss = 0.0012943
+I0414 03:25:47.352787 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000389005 (* 1 = 0.000389005 loss)
+I0414 03:25:47.352808 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000905314 (* 1 = 0.000905314 loss)
+I0414 03:25:47.352826 12560 sgd_solver.cpp:105] Iteration 7850, lr = 3.05176e-08
+I0414 03:26:05.135545 12560 solver.cpp:219] Iteration 7900 (2.81168 iter/s, 17.783s/50 iters), loss = 0.0070547
+I0414 03:26:05.135673 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00545742 (* 1 = 0.00545742 loss)
+I0414 03:26:05.135695 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00159731 (* 1 = 0.00159731 loss)
+I0414 03:26:05.135713 12560 sgd_solver.cpp:105] Iteration 7900, lr = 3.05176e-08
+I0414 03:26:22.916287 12560 solver.cpp:219] Iteration 7950 (2.81201 iter/s, 17.7808s/50 iters), loss = 0.00333366
+I0414 03:26:22.916364 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00243497 (* 1 = 0.00243497 loss)
+I0414 03:26:22.916385 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000898716 (* 1 = 0.000898716 loss)
+I0414 03:26:22.916402 12560 sgd_solver.cpp:105] Iteration 7950, lr = 3.05176e-08
+I0414 03:26:40.215986 12560 solver.cpp:331] Iteration 8000, Testing net (#0)
+I0414 03:26:46.085662 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.91704 (* 1 = 1.91704 loss)
+I0414 03:26:46.085717 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.775
+I0414 03:26:46.085739 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0691245 (* 1 = 0.0691245 loss)
+I0414 03:26:46.085754 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.966563
+I0414 03:26:46.391660 12560 solver.cpp:219] Iteration 8000 (2.12987 iter/s, 23.4756s/50 iters), loss = 0.00145204
+I0414 03:26:46.391757 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000183104 (* 1 = 0.000183104 loss)
+I0414 03:26:46.391779 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00126897 (* 1 = 0.00126897 loss)
+I0414 03:26:46.391801 12560 sgd_solver.cpp:105] Iteration 8000, lr = 1.52588e-08
+I0414 03:27:04.168231 12560 solver.cpp:219] Iteration 8050 (2.81267 iter/s, 17.7767s/50 iters), loss = 0.00424791
+I0414 03:27:04.168321 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00258611 (* 1 = 0.00258611 loss)
+I0414 03:27:04.168342 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00166183 (* 1 = 0.00166183 loss)
+I0414 03:27:04.168361 12560 sgd_solver.cpp:105] Iteration 8050, lr = 1.52588e-08
+I0414 03:27:21.950557 12560 solver.cpp:219] Iteration 8100 (2.81176 iter/s, 17.7825s/50 iters), loss = 0.00308118
+I0414 03:27:21.950826 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0025507 (* 1 = 0.0025507 loss)
+I0414 03:27:21.950870 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000530508 (* 1 = 0.000530508 loss)
+I0414 03:27:21.950892 12560 sgd_solver.cpp:105] Iteration 8100, lr = 1.52588e-08
+I0414 03:27:39.733302 12560 solver.cpp:219] Iteration 8150 (2.81171 iter/s, 17.7827s/50 iters), loss = 0.0086661
+I0414 03:27:39.733378 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00817849 (* 1 = 0.00817849 loss)
+I0414 03:27:39.733400 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000487647 (* 1 = 0.000487647 loss)
+I0414 03:27:39.733417 12560 sgd_solver.cpp:105] Iteration 8150, lr = 1.52588e-08
+I0414 03:27:57.514830 12560 solver.cpp:219] Iteration 8200 (2.81188 iter/s, 17.7817s/50 iters), loss = 0.00937356
+I0414 03:27:57.514966 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00603212 (* 1 = 0.00603212 loss)
+I0414 03:27:57.514986 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00334148 (* 1 = 0.00334148 loss)
+I0414 03:27:57.515005 12560 sgd_solver.cpp:105] Iteration 8200, lr = 1.52588e-08
+I0414 03:28:15.296305 12560 solver.cpp:219] Iteration 8250 (2.8119 iter/s, 17.7816s/50 iters), loss = 0.0172555
+I0414 03:28:15.296386 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00246789 (* 1 = 0.00246789 loss)
+I0414 03:28:15.296602 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0147877 (* 1 = 0.0147877 loss)
+I0414 03:28:15.296624 12560 sgd_solver.cpp:105] Iteration 8250, lr = 1.52588e-08
+I0414 03:28:33.072448 12560 solver.cpp:219] Iteration 8300 (2.81273 iter/s, 17.7763s/50 iters), loss = 0.00282297
+I0414 03:28:33.072712 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000446907 (* 1 = 0.000446907 loss)
+I0414 03:28:33.072755 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00237609 (* 1 = 0.00237609 loss)
+I0414 03:28:33.072779 12560 sgd_solver.cpp:105] Iteration 8300, lr = 1.52588e-08
+I0414 03:28:50.853967 12560 solver.cpp:219] Iteration 8350 (2.81191 iter/s, 17.7815s/50 iters), loss = 0.00118727
+I0414 03:28:50.854058 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000579362 (* 1 = 0.000579362 loss)
+I0414 03:28:50.854240 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000607931 (* 1 = 0.000607931 loss)
+I0414 03:28:50.854261 12560 sgd_solver.cpp:105] Iteration 8350, lr = 1.52588e-08
+I0414 03:29:08.636143 12560 solver.cpp:219] Iteration 8400 (2.81178 iter/s, 17.7823s/50 iters), loss = 0.00448034
+I0414 03:29:08.636381 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000819995 (* 1 = 0.000819995 loss)
+I0414 03:29:08.636422 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00366037 (* 1 = 0.00366037 loss)
+I0414 03:29:08.636445 12560 sgd_solver.cpp:105] Iteration 8400, lr = 1.52588e-08
+I0414 03:29:26.419381 12560 solver.cpp:219] Iteration 8450 (2.81163 iter/s, 17.7833s/50 iters), loss = 0.00521944
+I0414 03:29:26.419471 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0016831 (* 1 = 0.0016831 loss)
+I0414 03:29:26.419492 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00353636 (* 1 = 0.00353636 loss)
+I0414 03:29:26.419512 12560 sgd_solver.cpp:105] Iteration 8450, lr = 1.52588e-08
+I0414 03:29:44.199518 12560 solver.cpp:219] Iteration 8500 (2.8121 iter/s, 17.7803s/50 iters), loss = 0.00111054
+I0414 03:29:44.199762 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000487422 (* 1 = 0.000487422 loss)
+I0414 03:29:44.199805 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000623139 (* 1 = 0.000623139 loss)
+I0414 03:29:44.199828 12560 sgd_solver.cpp:105] Iteration 8500, lr = 7.62939e-09
+I0414 03:30:01.981320 12560 solver.cpp:219] Iteration 8550 (2.81185 iter/s, 17.7819s/50 iters), loss = 0.00258005
+I0414 03:30:01.981413 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000262105 (* 1 = 0.000262105 loss)
+I0414 03:30:01.981434 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00231796 (* 1 = 0.00231796 loss)
+I0414 03:30:01.981451 12560 sgd_solver.cpp:105] Iteration 8550, lr = 7.62939e-09
+I0414 03:30:19.762070 12560 solver.cpp:219] Iteration 8600 (2.81201 iter/s, 17.7809s/50 iters), loss = 0.000570071
+I0414 03:30:19.762233 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000268672 (* 1 = 0.000268672 loss)
+I0414 03:30:19.762254 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000301423 (* 1 = 0.000301423 loss)
+I0414 03:30:19.762272 12560 sgd_solver.cpp:105] Iteration 8600, lr = 7.62939e-09
+I0414 03:30:37.543925 12560 solver.cpp:219] Iteration 8650 (2.81184 iter/s, 17.7819s/50 iters), loss = 0.00135046
+I0414 03:30:37.543999 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000369903 (* 1 = 0.000369903 loss)
+I0414 03:30:37.544020 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000980583 (* 1 = 0.000980583 loss)
+I0414 03:30:37.544039 12560 sgd_solver.cpp:105] Iteration 8650, lr = 7.62939e-09
+I0414 03:30:55.323925 12560 solver.cpp:219] Iteration 8700 (2.81212 iter/s, 17.7802s/50 iters), loss = 0.00366428
+I0414 03:30:55.324059 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000691523 (* 1 = 0.000691523 loss)
+I0414 03:30:55.324079 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00297278 (* 1 = 0.00297278 loss)
+I0414 03:30:55.324097 12560 sgd_solver.cpp:105] Iteration 8700, lr = 7.62939e-09
+I0414 03:31:13.106400 12560 solver.cpp:219] Iteration 8750 (2.81174 iter/s, 17.7826s/50 iters), loss = 0.0018944
+I0414 03:31:13.106475 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0008662 (* 1 = 0.0008662 loss)
+I0414 03:31:13.106498 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00102822 (* 1 = 0.00102822 loss)
+I0414 03:31:13.106514 12560 sgd_solver.cpp:105] Iteration 8750, lr = 7.62939e-09
+I0414 03:31:30.887079 12560 solver.cpp:219] Iteration 8800 (2.81202 iter/s, 17.7808s/50 iters), loss = 0.0160705
+I0414 03:31:30.887300 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0135428 (* 1 = 0.0135428 loss)
+I0414 03:31:30.887342 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0025277 (* 1 = 0.0025277 loss)
+I0414 03:31:30.887367 12560 sgd_solver.cpp:105] Iteration 8800, lr = 7.62939e-09
+I0414 03:31:48.675618 12560 solver.cpp:219] Iteration 8850 (2.81079 iter/s, 17.7886s/50 iters), loss = 0.00344856
+I0414 03:31:48.675706 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000607715 (* 1 = 0.000607715 loss)
+I0414 03:31:48.675741 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00284086 (* 1 = 0.00284086 loss)
+I0414 03:31:48.675761 12560 sgd_solver.cpp:105] Iteration 8850, lr = 7.62939e-09
+I0414 03:32:06.458896 12560 solver.cpp:219] Iteration 8900 (2.81161 iter/s, 17.7834s/50 iters), loss = 0.00304763
+I0414 03:32:06.459028 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00219958 (* 1 = 0.00219958 loss)
+I0414 03:32:06.459050 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000848067 (* 1 = 0.000848067 loss)
+I0414 03:32:06.459070 12560 sgd_solver.cpp:105] Iteration 8900, lr = 7.62939e-09
+I0414 03:32:24.241235 12560 solver.cpp:219] Iteration 8950 (2.81176 iter/s, 17.7824s/50 iters), loss = 0.00214851
+I0414 03:32:24.241338 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000993193 (* 1 = 0.000993193 loss)
+I0414 03:32:24.241359 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00115533 (* 1 = 0.00115533 loss)
+I0414 03:32:24.241379 12560 sgd_solver.cpp:105] Iteration 8950, lr = 7.62939e-09
+I0414 03:32:41.544417 12560 solver.cpp:331] Iteration 9000, Testing net (#0)
+I0414 03:32:47.415243 12560 solver.cpp:398]     Test net output #0: emotionClassloss = 1.85295 (* 1 = 1.85295 loss)
+I0414 03:32:47.415298 12560 solver.cpp:398]     Test net output #1: emotion_accuracy = 0.782188
+I0414 03:32:47.415333 12560 solver.cpp:398]     Test net output #2: personClassloss = 0.0701903 (* 1 = 0.0701903 loss)
+I0414 03:32:47.415347 12560 solver.cpp:398]     Test net output #3: person_accuracy = 0.96625
+I0414 03:32:47.718741 12560 solver.cpp:219] Iteration 9000 (2.12968 iter/s, 23.4777s/50 iters), loss = 0.0085397
+I0414 03:32:47.718827 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000315218 (* 1 = 0.000315218 loss)
+I0414 03:32:47.718847 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00822449 (* 1 = 0.00822449 loss)
+I0414 03:32:47.718865 12560 sgd_solver.cpp:105] Iteration 9000, lr = 3.8147e-09
+I0414 03:33:05.494050 12560 solver.cpp:219] Iteration 9050 (2.81287 iter/s, 17.7755s/50 iters), loss = 0.00544461
+I0414 03:33:05.494130 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0037598 (* 1 = 0.0037598 loss)
+I0414 03:33:05.494151 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00168482 (* 1 = 0.00168482 loss)
+I0414 03:33:05.494168 12560 sgd_solver.cpp:105] Iteration 9050, lr = 3.8147e-09
+I0414 03:33:23.274226 12560 solver.cpp:219] Iteration 9100 (2.81209 iter/s, 17.7803s/50 iters), loss = 0.0183531
+I0414 03:33:23.274502 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000643276 (* 1 = 0.000643276 loss)
+I0414 03:33:23.274546 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0177098 (* 1 = 0.0177098 loss)
+I0414 03:33:23.274569 12560 sgd_solver.cpp:105] Iteration 9100, lr = 3.8147e-09
+I0414 03:33:41.058289 12560 solver.cpp:219] Iteration 9150 (2.81151 iter/s, 17.7841s/50 iters), loss = 0.00273867
+I0414 03:33:41.058377 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000162708 (* 1 = 0.000162708 loss)
+I0414 03:33:41.058398 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00257597 (* 1 = 0.00257597 loss)
+I0414 03:33:41.058418 12560 sgd_solver.cpp:105] Iteration 9150, lr = 3.8147e-09
+I0414 03:33:58.839244 12560 solver.cpp:219] Iteration 9200 (2.81197 iter/s, 17.7811s/50 iters), loss = 0.00335397
+I0414 03:33:58.839458 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000563151 (* 1 = 0.000563151 loss)
+I0414 03:33:58.839500 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00279083 (* 1 = 0.00279083 loss)
+I0414 03:33:58.839524 12560 sgd_solver.cpp:105] Iteration 9200, lr = 3.8147e-09
+I0414 03:34:16.623644 12560 solver.cpp:219] Iteration 9250 (2.81144 iter/s, 17.7845s/50 iters), loss = 0.00150132
+I0414 03:34:16.623741 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00022478 (* 1 = 0.00022478 loss)
+I0414 03:34:16.623764 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00127656 (* 1 = 0.00127656 loss)
+I0414 03:34:16.623781 12560 sgd_solver.cpp:105] Iteration 9250, lr = 3.8147e-09
+I0414 03:34:34.403744 12560 solver.cpp:219] Iteration 9300 (2.81211 iter/s, 17.7803s/50 iters), loss = 0.00439856
+I0414 03:34:34.403983 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00256075 (* 1 = 0.00256075 loss)
+I0414 03:34:34.404026 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00183783 (* 1 = 0.00183783 loss)
+I0414 03:34:34.404050 12560 sgd_solver.cpp:105] Iteration 9300, lr = 3.8147e-09
+I0414 03:34:52.187597 12560 solver.cpp:219] Iteration 9350 (2.81153 iter/s, 17.7839s/50 iters), loss = 0.011156
+I0414 03:34:52.187682 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000605173 (* 1 = 0.000605173 loss)
+I0414 03:34:52.187705 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0105509 (* 1 = 0.0105509 loss)
+I0414 03:34:52.187742 12560 sgd_solver.cpp:105] Iteration 9350, lr = 3.8147e-09
+I0414 03:35:09.970329 12560 solver.cpp:219] Iteration 9400 (2.81169 iter/s, 17.7829s/50 iters), loss = 0.00193844
+I0414 03:35:09.970558 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000882497 (* 1 = 0.000882497 loss)
+I0414 03:35:09.970619 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00105596 (* 1 = 0.00105596 loss)
+I0414 03:35:09.970655 12560 sgd_solver.cpp:105] Iteration 9400, lr = 3.8147e-09
+I0414 03:35:27.752511 12560 solver.cpp:219] Iteration 9450 (2.8118 iter/s, 17.7822s/50 iters), loss = 0.00146072
+I0414 03:35:27.752609 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000611708 (* 1 = 0.000611708 loss)
+I0414 03:35:27.752632 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000849028 (* 1 = 0.000849028 loss)
+I0414 03:35:27.752652 12560 sgd_solver.cpp:105] Iteration 9450, lr = 3.8147e-09
+I0414 03:35:45.533306 12560 solver.cpp:219] Iteration 9500 (2.812 iter/s, 17.7809s/50 iters), loss = 0.00164239
+I0414 03:35:45.533584 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000460795 (* 1 = 0.000460795 loss)
+I0414 03:35:45.533627 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00118161 (* 1 = 0.00118161 loss)
+I0414 03:35:45.533651 12560 sgd_solver.cpp:105] Iteration 9500, lr = 1.90735e-09
+I0414 03:36:03.314723 12560 solver.cpp:219] Iteration 9550 (2.81192 iter/s, 17.7814s/50 iters), loss = 0.00119444
+I0414 03:36:03.314813 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000190821 (* 1 = 0.000190821 loss)
+I0414 03:36:03.315033 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00100364 (* 1 = 0.00100364 loss)
+I0414 03:36:03.315057 12560 sgd_solver.cpp:105] Iteration 9550, lr = 1.90735e-09
+I0414 03:36:21.095198 12560 solver.cpp:219] Iteration 9600 (2.81205 iter/s, 17.7806s/50 iters), loss = 0.0179771
+I0414 03:36:21.095423 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0174309 (* 1 = 0.0174309 loss)
+I0414 03:36:21.095464 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000546201 (* 1 = 0.000546201 loss)
+I0414 03:36:21.095489 12560 sgd_solver.cpp:105] Iteration 9600, lr = 1.90735e-09
+I0414 03:36:38.877288 12560 solver.cpp:219] Iteration 9650 (2.81181 iter/s, 17.7821s/50 iters), loss = 0.0014526
+I0414 03:36:38.877373 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000645405 (* 1 = 0.000645405 loss)
+I0414 03:36:38.877395 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.000807205 (* 1 = 0.000807205 loss)
+I0414 03:36:38.877413 12560 sgd_solver.cpp:105] Iteration 9650, lr = 1.90735e-09
+I0414 03:36:56.658812 12560 solver.cpp:219] Iteration 9700 (2.81188 iter/s, 17.7817s/50 iters), loss = 0.00527548
+I0414 03:36:56.659036 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.00222142 (* 1 = 0.00222142 loss)
+I0414 03:36:56.659078 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00305407 (* 1 = 0.00305407 loss)
+I0414 03:36:56.659102 12560 sgd_solver.cpp:105] Iteration 9700, lr = 1.90735e-09
+I0414 03:37:14.440520 12560 solver.cpp:219] Iteration 9750 (2.81187 iter/s, 17.7818s/50 iters), loss = 0.00560658
+I0414 03:37:14.440603 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000629092 (* 1 = 0.000629092 loss)
+I0414 03:37:14.440685 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0049775 (* 1 = 0.0049775 loss)
+I0414 03:37:14.440703 12560 sgd_solver.cpp:105] Iteration 9750, lr = 1.90735e-09
+I0414 03:37:32.221961 12560 solver.cpp:219] Iteration 9800 (2.81189 iter/s, 17.7816s/50 iters), loss = 0.0736832
+I0414 03:37:32.222098 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0692868 (* 1 = 0.0692868 loss)
+I0414 03:37:32.222120 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00439636 (* 1 = 0.00439636 loss)
+I0414 03:37:32.222138 12560 sgd_solver.cpp:105] Iteration 9800, lr = 1.90735e-09
+I0414 03:37:50.006834 12560 solver.cpp:219] Iteration 9850 (2.81136 iter/s, 17.785s/50 iters), loss = 0.00266575
+I0414 03:37:50.006911 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000571498 (* 1 = 0.000571498 loss)
+I0414 03:37:50.006932 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.00209426 (* 1 = 0.00209426 loss)
+I0414 03:37:50.006952 12560 sgd_solver.cpp:105] Iteration 9850, lr = 1.90735e-09
+I0414 03:38:07.788305 12560 solver.cpp:219] Iteration 9900 (2.81189 iter/s, 17.7816s/50 iters), loss = 0.0194498
+I0414 03:38:07.788461 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.0119165 (* 1 = 0.0119165 loss)
+I0414 03:38:07.788482 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0075333 (* 1 = 0.0075333 loss)
+I0414 03:38:07.788501 12560 sgd_solver.cpp:105] Iteration 9900, lr = 1.90735e-09
+I0414 03:38:25.571022 12560 solver.cpp:219] Iteration 9950 (2.8117 iter/s, 17.7828s/50 iters), loss = 0.0149506
+I0414 03:38:25.571099 12560 solver.cpp:238]     Train net output #0: emotionClassloss = 0.000948908 (* 1 = 0.000948908 loss)
+I0414 03:38:25.571120 12560 solver.cpp:238]     Train net output #1: personClassloss = 0.0140017 (* 1 = 0.0140017 loss)
+I0414 03:38:25.571136 12560 sgd_solver.cpp:105] Iteration 9950, lr = 1.90735e-09
+I0414 03:38:42.880837 12560 solver.cpp:448] Snapshotting to binary proto file alex_multi_iter_10000.caffemodel
+Killed
