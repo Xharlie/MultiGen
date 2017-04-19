@@ -6,36 +6,38 @@ import PIL
 import h5py
 
 CAFFE_ROOT = '/Users/xharlie/caffe/build/tools/caffe'
-SOURCE_FOLDER= '../../Source/AlexPretrain/'
+# SOURCE_FOLDER= '../../Source/AlexPretrain/'
+SOURCE_FOLDER= '../../Source/MMI/'
 SESSION= '1'
-SOURCE_FILE= 'all_info_large_3emo.h5'
+SOURCE_FILE= 'all_info_large_cropped.h5'
+# SOURCE_FILE= 'all_info_large_4emo_ALLSession.h5'
 ORI_SHAPE = 600
 SHAPE = 384
 PIXEL_DEPTH = 255
 
 def deploy():
   caffe.set_mode_cpu()
-  net = caffe.Net('deploy_val.prototxt', 'snapshop_iter_3000.caffemodel', caffe.TEST)
+  net = caffe.Net('deploy_val.prototxt', '995_multi_snap_alex_4emo__iter_30000.caffemodel', caffe.TEST)
 
   file = h5py.File(SOURCE_FOLDER + SOURCE_FILE, 'r')  # 'r' means that hdf5 file is open in read-only mode
   data = file["data"]
-  person = file["person"]
-  emotion = file["emotion"]
-  session = file["session"]
-  transform = file["transform"]
+  personClass = file["personclass"]
+  emotionClass = file["emotionclass"]
+  sessionClass = file["sessionclass"]
+  transformClass = file["transformclass"]
 
   anormally = []
   for i in range(0, data.shape[0]):
 
     net.blobs['data'].data[...] = data[i]
-    net.blobs['person'].data[...] = person[i]
-    net.blobs['emotion'].data[...] = emotion[i]
-    net.blobs['session'].data[...] = session[i]
-    net.blobs['transform'].data[...] = transform[i]
+    # net.blobs['personClass'].data[...] = [0]
+    # net.blobs['emotionClass'].data[...] = emotionClass[i]
+    # net.blobs['session'].data[...] = session[i]
+    # net.blobs['transform'].data[...] = transform[i]
 
     results= net.forward()
 
-    prob = results["prob"][0].tolist()
+    prob = results["fc8_emotion"][0].tolist()
     # accuracy = results["accuracy"][0]
     # print "person:" + oneHot2one(person[i]), \
     #       "session:1", \
@@ -43,18 +45,14 @@ def deploy():
     #       "emotion:" + str(emotion[i]), \
     #       "prediction:" + str(prob.index(max(prob))), \
     #       "prob:" + str(prob)
-    if (prob.index(max(prob)) != emotion[i]):
-      anormally.append( {'person':oneHot2one(person[i]), \
-                         'session' : oneHot2one(session[i]), \
-                         'transform' : oneHot2one(transform[i]), \
-                         'emotion' : emotion[i], \
+    if (prob.index(max(prob)) != emotionClass[i]):
+      print {'person': personClass[i], \
+                         'session' : sessionClass[i], \
+                         'transform' : transformClass[i], \
+                         'emotion' : emotionClass[i], \
                          'prediction' : str(prob.index(max(prob))), \
-                         "prob:" : str(prob)} )
+                         "prob:" : str(prob)}
   file.close()
-  for i,x in anormally:
-    print ""
-    for y,z in anormally[x].items():
-        print (y,':', str(z)),
 
 
 def oneHot2one(oneHot):
