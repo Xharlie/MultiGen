@@ -956,7 +956,7 @@ layer {
   top: "fc7_person"
   param {
     lr_mult: 0
-    decay_mult: 1
+    decay_mult: 0
   }
   param {
     lr_mult: 0
@@ -1149,7 +1149,7 @@ layer {
   bottom: "fc8_person"
   bottom: "personclass"
   top: "personClassloss"
-  loss_weight: 1000
+  loss_weight: 500
 }
 
 layer {
@@ -1168,5 +1168,5 @@ layer {
   bottom: "fc8_emotion"
   bottom: "emotionclass"
   top: "emotionClassloss"
-  loss_weight: 1000
+  loss_weight: 500
 }

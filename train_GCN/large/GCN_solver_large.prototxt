@@ -1,37 +1,27 @@
 # The train/test net protocol buffer definition
-net: "GCN_train_large_fixDeterm.prototxt"
+#net: "GCN_train_large_genOnly.prototxt"
 #net: "GCN_train_large_fixDeterm.prototxt"
-test_initialization: false
-# test_iter specifies how many forward passes the test should carry out.
-# test_iter: 100
-# Carry out testing every 500 training iterations.
-# test_interval: 500
-# The base learning rate, momentum and the weight decay of the network.
+#test_initialization: false
+net: "GCN_train_large_flexDeterm.prototxt"
+test_iter: 100
+test_interval: 500
 type: "Adam"
 base_lr: 0.0002
-momentum: 0.9
-momentum2: 0.99
+momentum: 0.92
+momentum2: 0.995
 delta: 0.00000001
 #weight_decay: 0
-weight_decay: 0.000001
+weight_decay: 0.00005
 # The learning rate policy
-lr_policy: "multistep"
+lr_policy: "step"
 gamma: 0.5
-stepvalue: 600
-stepvalue: 2000
-stepvalue: 4000
-stepvalue: 6000
-stepvalue: 8000
-stepvalue: 10000
-stepvalue: 12000
-stepvalue: 14000
-stepvalue: 16000
+stepsize: 500
 # Display every 100 iterations
 display: 100
 # The maximum number of iterations
-max_iter: 20000
+max_iter: 40000
 # snapshot intermediate results
-snapshot: 4000
-snapshot_prefix: "genOnlySnapshot"
+snapshot: 40000
+snapshot_prefix: "Flex_OneSession_Snapshot_fineTune"
 # solver mode: CPU or GPU
 solver_mode: GPU
