@@ -3,12 +3,12 @@ from PIL import Image
 import numpy as np
 
 PERSON=3
-EMO=6
+EMO=2
 TRANSFORM=1
 
 def check():
   imgArray = []
-  with h5py.File('../../Source/MMI/all_info_small.h5', 'r') as f:
+  with h5py.File('../../Source/MMI/all_info_large_cropped.h5', 'r') as f:
     imgArray = f['data']
     person = f['person']
     emotion = f['emotion']
