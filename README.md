@@ -1,4 +1,6 @@
-# MultiGen (Boosting visual concept generation by incorporating Generative Adversarial Network and Generative Cooperative Network)
+# MultiGen (Boosting visual concept generation by incorporating Generative Adversarial Network and Generative Cooperative Network)<br /> 
+Paper: Generative Cooperative Net for Image Generation and Data Augmentation <br /> 
+Authors: Qiangeng Xu, Zengchang Qin, Tao Wan <https://arxiv.org/abs/1705.02887> <br /> 
 ## 1. Introduction:
 This is the development repository of the research 'MultiGen'.  
 The goal of this research is twofold:
